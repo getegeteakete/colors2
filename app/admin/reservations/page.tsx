@@ -31,7 +31,10 @@ type Reservation = {
   date: string;
   time: string;
   address: string | null;
+  zoom_url: string | null;
   content: string;
+  photos: string[];
+  ai_price: number | null;
   status: 'reserved' | 'done' | 'estimated';
   created_at: string;
   users: {
