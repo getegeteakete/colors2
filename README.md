@@ -1,73 +1,160 @@
-# Welcome to your Lovable project
+# 現地調査予約サイト
 
-## Project info
+Next.js 14 + Supabase + Stripe + Zoom API を使用したリフォーム・塗装の現地調査予約システム
 
-**URL**: https://lovable.dev/projects/186cd2bb-4256-482a-ae0a-eec668f97199
+## クイックスタート
 
-## How can I edit this code?
+予約機能をすぐに使いたい場合は、[SETUP.md](./SETUP.md) の詳細なセットアップガイドを参照してください。
 
-There are several ways of editing your application.
+### 最小限のセットアップ（予約機能のみ）
 
-**Use Lovable**
+1. **Supabaseプロジェクトを作成**
+   - [Supabase](https://supabase.com/) でアカウント作成
+   - 新しいプロジェクトを作成
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/186cd2bb-4256-482a-ae0a-eec668f97199) and start prompting.
+2. **データベースをセットアップ**
+   - Supabaseダッシュボードの「SQL Editor」で `supabase/migrations/001_initial_schema.sql` を実行
 
-Changes made via Lovable will be committed automatically to this repo.
+3. **環境変数を設定**
+   - `.env.local` を作成してSupabaseの認証情報とメール設定を追加
+   - 詳細は「環境変数の設定」セクションを参照
 
-**Use your preferred IDE**
+4. **サンプルデータを作成**
+   ```bash
+   npm run seed
+   ```
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+5. **開発サーバーを起動**
+   ```bash
+   npm run dev
+   ```
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## セットアップ
 
-Follow these steps:
+### 1. 依存関係のインストール
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+```bash
+npm install
+```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### 2. Supabase プロジェクトの作成
 
-# Step 3: Install the necessary dependencies.
-npm i
+1. [Supabase](https://supabase.com/) にアクセスしてアカウントを作成
+2. 新しいプロジェクトを作成
+3. プロジェクトの設定から以下を取得：
+   - Project URL
+   - anon/public key
+   - service_role key
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+### 3. データベースのセットアップ
+
+1. Supabaseダッシュボードの「SQL Editor」を開く
+2. `supabase/migrations/001_initial_schema.sql` の内容をコピー＆ペースト
+3. 「Run」をクリックしてテーブルを作成
+
+### 4. Storage バケットの作成
+
+Supabaseダッシュボードの「Storage」から以下を作成：
+
+1. **photos** バケット
+   - 公開バケットとして作成
+   - ポリシー: `SELECT` と `INSERT` を許可
+
+2. **documents** バケット（オプション）
+   - 公開バケットとして作成
+   - ポリシー: `SELECT` と `INSERT` を許可
+
+### 5. 環境変数の設定
+
+`.env.local` ファイルを作成し、`.env.example` を参考に環境変数を設定：
+
+```bash
+cp .env.example .env.local
+```
+
+`.env.local` を編集して、Supabaseの認証情報を入力：
+
+```env
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+
+# Xサーバー SMTP（メール送信）
+SMTP_HOST=smtp.xserver.jp
+SMTP_PORT=587
+SMTP_USER=yoyaku@colors092.site
+SMTP_PASSWORD=your_email_password
+
+# App
+NEXT_PUBLIC_APP_URL=http://localhost:7000
+
+# 管理画面パスワード（オプション）
+ADMIN_PASSWORD=your_admin_password
+
+# OpenAI API（AI見積もり機能 - オプション）
+OPENAI_API_KEY=sk-xxxxxxxxxxxxx
+
+# 銀行振り込み情報（銀行振り込み決済を使う場合）
+BANK_NAME=〇〇銀行
+BANK_BRANCH=〇〇支店
+BANK_ACCOUNT_TYPE=普通
+BANK_ACCOUNT_NUMBER=1234567
+BANK_ACCOUNT_NAME=株式会社COLORS
+```
+
+**メール設定について:**
+- Xサーバーのメールアドレス `yoyaku@colors092.site` を使用してメール送信を行います
+- Xサーバーのサーバーパネルでメールパスワードを設定してください
+- すべてのメールは `yoyaku@colors092.site` から送信され、管理者への通知もこのアドレスに届きます
+
+**注意**: `.env.local` は `.gitignore` に含まれているため、Gitにコミットされません。
+
+### 6. サンプルスケジュールデータの作成
+
+予約カレンダーに表示するためのサンプルスケジュールを作成：
+
+```bash
+npm run seed
+```
+
+このコマンドは、今日から60日分の営業日（火・水・木、11:00-18:00、1時間枠）のスケジュールを作成します。
+
+**予約受付時間について:**
+- 営業日: 火曜日、水曜日、木曜日のみ
+- 営業時間: 11:00～18:00（1時間枠）
+- 予約確定時: 予約した時間とその前後1時間（移動時間のため）が自動的に予約不可になります
+
+### 7. 開発サーバーの起動
+
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+アプリケーションは http://localhost:7000 で起動します。
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### 8. 動作確認
 
-**Use GitHub Codespaces**
+1. トップページ（http://localhost:7000）にアクセス
+2. 「予約する」ボタンをクリック
+3. カレンダーから日付を選択
+4. 時間枠を選択して予約フォームに進む
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 機能
 
-## What technologies are used for this project?
+- 予約カレンダー（空き枠表示）
+- 予約フォーム（訪問/Zoom選択、写真アップロード）
+- Stripe決済
+- Zoomミーティング自動生成
+- PDF生成（請求書・領収書）
+- マイページ（予約履歴・支払履歴）
+- 管理画面（ダッシュボード、予約管理、決済管理、スケジュール管理）
 
-This project is built with:
+## デプロイ
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+Vercel にデプロイする場合：
 
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/186cd2bb-4256-482a-ae0a-eec668f97199) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+1. GitHub リポジトリにプッシュ
+2. Vercel でプロジェクトをインポート
+3. 環境変数を設定
+4. デプロイ
