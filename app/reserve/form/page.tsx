@@ -59,6 +59,11 @@ export default function ReserveFormPage() {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
+    if (!supabase) {
+      toast.error('Supabaseが設定されていません');
+      return;
+    }
+
     setUploading(true);
     try {
       const uploadPromises = Array.from(files).map(async (file) => {
@@ -124,6 +129,11 @@ export default function ReserveFormPage() {
   const onSubmit = async (values: FormValues) => {
     if (!date || !time) {
       toast.error('日時が選択されていません');
+      return;
+    }
+
+    if (!supabase) {
+      toast.error('Supabaseが設定されていません');
       return;
     }
 

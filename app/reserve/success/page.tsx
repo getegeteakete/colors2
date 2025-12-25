@@ -22,6 +22,11 @@ export default function SuccessPage() {
 
   const fetchReservation = async () => {
     try {
+      if (!supabase) {
+        console.error('Supabaseが設定されていません');
+        return;
+      }
+
       const { data: payment } = await supabase
         .from('payments')
         .select('*, reservations(*, users(*))')

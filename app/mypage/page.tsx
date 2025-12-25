@@ -26,6 +26,12 @@ export default function MypagePage() {
 
   const fetchData = async (email: string) => {
     try {
+      if (!supabase) {
+        console.error('Supabaseが設定されていません');
+        setLoading(false);
+        return;
+      }
+
       const { data: user } = await supabase
         .from('users')
         .select('id')

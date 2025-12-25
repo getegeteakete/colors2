@@ -32,6 +32,12 @@ export default function CheckoutPage() {
 
   const fetchReservation = async () => {
     try {
+      if (!supabase) {
+        console.error('Supabaseが設定されていません');
+        toast.error('Supabaseが設定されていません');
+        return;
+      }
+
       const { data, error } = await supabase
         .from('reservations')
         .select('*, users(*)')
