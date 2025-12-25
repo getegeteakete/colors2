@@ -68,7 +68,7 @@ export default function MypagePage() {
     const variants: { [key: string]: 'default' | 'secondary' | 'destructive' } = {
       reserved: 'default',
       done: 'secondary',
-      estimated: 'outline',
+      estimated: 'secondary',
       paid: 'default',
       pending: 'secondary',
       refunded: 'destructive',
@@ -199,6 +199,7 @@ export default function MypagePage() {
     </div>
   );
 }
+
 
 
 
