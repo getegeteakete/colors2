@@ -1,17 +1,12 @@
 import Stripe from 'stripe';
 
-// ビルド時には環境変数が設定されていない可能性があるため、
-// 実行時にのみStripeクライアントを初期化する
-const secretKey = process.env.STRIPE_SECRET_KEY;
+// 一時的にダミーキーで動作するように設定
+// 本番環境では環境変数STRIPE_SECRET_KEYを設定してください
+const secretKey = process.env.STRIPE_SECRET_KEY || 'sk_test_dummy_key_for_build_time_only';
 
-export const stripe = secretKey
-  ? new Stripe(secretKey, {
-      apiVersion: '2025-02-24.acacia',
-    })
-  : // ビルド時の型エラーを回避するため、ダミーのインスタンスを作成
-    (new Stripe('sk_test_dummy_key_for_build_time_only', {
-      apiVersion: '2025-02-24.acacia',
-    }) as Stripe);
+export const stripe = new Stripe(secretKey, {
+  apiVersion: '2025-02-24.acacia',
+});
 
 
 
