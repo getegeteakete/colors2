@@ -4,8 +4,9 @@ import { cookies } from 'next/headers';
 export async function createServerClient() {
   const cookieStore = await cookies();
   
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+  // ビルド時に環境変数が設定されていない場合でもビルドが通るようにダミー値を使用
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://dummy.supabase.co';
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'dummy-anon-key';
 
   return createClient(supabaseUrl, supabaseAnonKey, {
     auth: {
