@@ -64,17 +64,18 @@ export default function ReserveFormPage() {
       return;
     }
 
+    const client = supabase; // 型ガードのためローカル変数に代入
     setUploading(true);
     try {
       const uploadPromises = Array.from(files).map(async (file) => {
         const fileName = `${Date.now()}-${file.name}`;
-        const { data, error } = await supabase.storage
+        const { data, error } = await client.storage
           .from('photos')
           .upload(fileName, file);
 
         if (error) throw error;
 
-        const { data: urlData } = supabase.storage
+        const { data: urlData } = client.storage
           .from('photos')
           .getPublicUrl(fileName);
 
@@ -137,16 +138,17 @@ export default function ReserveFormPage() {
       return;
     }
 
+    const client = supabase; // 型ガードのためローカル変数に代入
     try {
       // Create or get user
-      let { data: userData } = await supabase
+      let { data: userData } = await client
         .from('users')
         .select('id')
         .eq('email', values.email)
         .single();
 
       if (!userData) {
-        const { data: newUser, error: userError } = await supabase
+        const { data: newUser, error: userError } = await client
           .from('users')
           .insert({
             name: values.name,
@@ -161,7 +163,7 @@ export default function ReserveFormPage() {
         userData = newUser;
       } else {
         // Update user info
-        await supabase
+        await client
           .from('users')
           .update({
             name: values.name,
@@ -172,7 +174,7 @@ export default function ReserveFormPage() {
       }
 
       // Create reservation
-      const { data: reservation, error: reservationError } = await supabase
+      const { data: reservation, error: reservationError } = await client
         .from('reservations')
         .insert({
           user_id: userData.id,
@@ -197,7 +199,7 @@ export default function ReserveFormPage() {
       try {
         // 各時間枠を予約不可に更新
         for (const slotTime of reservedTimeSlots) {
-          await supabase
+          await client
             .from('schedules')
             .update({ available: false })
             .eq('staff_id', staffId)
