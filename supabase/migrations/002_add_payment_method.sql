@@ -17,3 +17,4 @@ ADD COLUMN IF NOT EXISTS paypal_transaction_id TEXT;
 
 -- Create index for payment method
 CREATE INDEX IF NOT EXISTS idx_payments_payment_method ON payments(payment_method);
+

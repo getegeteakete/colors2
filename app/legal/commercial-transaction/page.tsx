@@ -190,3 +190,4 @@ export default function CommercialTransactionPage() {
     </div>
   );
 }
+

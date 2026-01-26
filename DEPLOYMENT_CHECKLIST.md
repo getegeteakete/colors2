@@ -132,3 +132,4 @@ ADMIN_PASSWORD=your_secure_password
 - [ ] 機密情報（`SUPABASE_SERVICE_ROLE_KEY`, `STRIPE_SECRET_KEY`, `OPENAI_API_KEY`）が本番環境で設定されている
 - [ ] `.env.local` がGitにコミットされていない
 - [ ] 管理画面パスワードが強力なパスワードになっている
+

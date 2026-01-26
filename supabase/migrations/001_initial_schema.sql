@@ -87,3 +87,4 @@ CREATE TRIGGER update_schedules_updated_at BEFORE UPDATE ON schedules
 
 
 
+
