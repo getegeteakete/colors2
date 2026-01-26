@@ -8,9 +8,19 @@ export async function createServerClient() {
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
   return createClient(supabaseUrl, supabaseAnonKey, {
-    cookies: {
-      get(name: string) {
-        return cookieStore.get(name)?.value;
+    auth: {
+      storage: {
+        getItem: (key: string) => {
+          return cookieStore.get(key)?.value ?? null;
+        },
+        setItem: (key: string, value: string) => {
+          // Server-side: cookies are set via Set-Cookie header
+          // This is a no-op on the server
+        },
+        removeItem: (key: string) => {
+          // Server-side: cookies are removed via Set-Cookie header
+          // This is a no-op on the server
+        },
       },
     },
   });
