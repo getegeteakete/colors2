@@ -1,8 +1,9 @@
 import PDFDocument from 'pdfkit';
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+// ビルド時に環境変数が設定されていない場合でもビルドが通るようにダミー値を使用
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://dummy.supabase.co';
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || 'dummy-service-key';
 const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
 
 export async function generateInvoicePDF(
