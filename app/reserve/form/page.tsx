@@ -160,6 +160,7 @@ export default function ReserveFormPage() {
           .single();
 
         if (userError) throw userError;
+        if (!newUser) throw new Error('ユーザーの作成に失敗しました');
         userData = newUser;
       } else {
         // Update user info
@@ -171,6 +172,10 @@ export default function ReserveFormPage() {
             address: values.address,
           })
           .eq('id', userData.id);
+      }
+
+      if (!userData) {
+        throw new Error('ユーザー情報が取得できませんでした');
       }
 
       // Create reservation
