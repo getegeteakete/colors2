@@ -9,14 +9,13 @@ export default function AdminLayout({
 }) {
   return (
     <AdminAuth>
-      <div className="flex min-h-screen bg-[#f0f0f1]">
+      <div className="min-h-screen bg-[#f0f0f1]">
+        {/* WP風: サイドバーは画面上端から全高、ヘッダーはコンテンツ上のみ */}
         <AdminSidebar />
-        <div className="ml-64 flex-1">
-          <AdminHeader />
-          <main className="mt-12 p-8">
-            {children}
-          </main>
-        </div>
+        <AdminHeader />
+        <main className="ml-64 pt-12 p-6 min-h-screen">
+          {children}
+        </main>
       </div>
     </AdminAuth>
   );
