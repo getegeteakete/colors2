@@ -25,24 +25,28 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative gradient-light py-20 md:py-32 overflow-hidden">
-        <div className="container mx-auto px-4">
+      <section
+        className="relative py-20 md:py-32 overflow-hidden bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: "url('/1.png')" }}
+      >
+        <div className="absolute inset-0 bg-black/40" aria-hidden />
+        <div className="container relative z-10 mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
-            <Badge className="mb-6 text-base px-4 py-2" variant="secondary">
+            <Badge className="mb-6 text-base px-4 py-2 bg-white/90 text-foreground border-0">
               <Calendar className="w-4 h-4 mr-2" />
               24時間いつでもオンライン予約可能
             </Badge>
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 text-foreground leading-tight">
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white leading-tight drop-shadow-md">
               リフォーム・塗装の<br />
               現地調査を<br className="md:hidden" />
               <span className="text-primary">簡単予約</span>
             </h1>
-            <p className="text-lg md:text-xl text-muted-foreground mb-4 max-w-2xl mx-auto">
+            <p className="text-lg md:text-xl text-white/95 mb-4 max-w-2xl mx-auto drop-shadow">
               株式会社COLORSのリフォーム・塗装現地調査予約サービス。<br />
               日程選択から決済まで、すべてオンラインで完結します。
             </p>
-            <p className="text-base text-muted-foreground mb-8">
-              <span className="font-semibold text-foreground">福岡市を中心にご対応いたします。</span>
+            <p className="text-base text-white/90 mb-8">
+              <span className="font-semibold">福岡市を中心にご対応いたします。</span>
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/reserve">
