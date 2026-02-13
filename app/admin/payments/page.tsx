@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase/client';
 import { format } from 'date-fns';
@@ -48,7 +48,7 @@ type Payment = {
   };
 };
 
-export default function PaymentsPage() {
+function PaymentsPageContent() {
   const searchParams = useSearchParams();
   const [payments, setPayments] = useState<Payment[]>([]);
   const [loading, setLoading] = useState(true);
@@ -319,5 +319,13 @@ export default function PaymentsPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function PaymentsPage() {
+  return (
+    <Suspense fallback={<div className="p-6"><p className="text-muted-foreground">読み込み中...</p></div>}>
+      <PaymentsPageContent />
+    </Suspense>
   );
 }

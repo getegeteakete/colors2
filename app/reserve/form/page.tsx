@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -31,7 +31,7 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-export default function ReserveFormPage() {
+function ReserveFormContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const date = searchParams.get('date');
@@ -445,9 +445,13 @@ export default function ReserveFormPage() {
   );
 }
 
-
-
-
+export default function ReserveFormPage() {
+  return (
+    <Suspense fallback={<div className="container mx-auto px-4 py-8"><p className="text-muted-foreground">読み込み中...</p></div>}>
+      <ReserveFormContent />
+    </Suspense>
+  );
+}
 
 
 

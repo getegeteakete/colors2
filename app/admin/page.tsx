@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase/client';
 import { Calendar, DollarSign, CheckCircle, Clock } from 'lucide-react';
 import { isViewMode, setViewMode, MOCK_ADMIN_STATS } from '@/lib/view-mode';
 
-export default function AdminDashboardPage() {
+function AdminDashboardContent() {
   const searchParams = useSearchParams();
   const [stats, setStats] = useState({
     todayReservations: 0,
@@ -172,5 +172,13 @@ export default function AdminDashboardPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function AdminDashboardPage() {
+  return (
+    <Suspense fallback={<div className="bg-white border border-[#c3c4c7] rounded shadow-sm p-8"><p className="text-center text-[#646970]">読み込み中...</p></div>}>
+      <AdminDashboardContent />
+    </Suspense>
   );
 }

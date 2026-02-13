@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -11,7 +11,7 @@ import { supabase } from '@/lib/supabase/client';
 import { Download, ExternalLink } from 'lucide-react';
 import { isViewMode, setViewMode, MOCK_MYPAGE_RESERVATIONS, MOCK_MYPAGE_PAYMENTS, MOCK_RESERVATION } from '@/lib/view-mode';
 
-export default function MypagePage() {
+function MypagePageContent() {
   const searchParams = useSearchParams();
   const [reservations, setReservations] = useState<any[]>([]);
   const [payments, setPayments] = useState<any[]>([]);
@@ -212,9 +212,13 @@ export default function MypagePage() {
   );
 }
 
-
-
-
+export default function MypagePage() {
+  return (
+    <Suspense fallback={<div className="container mx-auto px-4 py-8"><p className="text-muted-foreground">読み込み中...</p></div>}>
+      <MypagePageContent />
+    </Suspense>
+  );
+}
 
 
 

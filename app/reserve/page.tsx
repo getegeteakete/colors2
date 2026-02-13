@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Calendar } from '@/components/ui/calendar';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -22,7 +22,7 @@ type ScheduleData = {
   times: TimeSlot[];
 };
 
-export default function ReservePage() {
+function ReservePageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
@@ -231,3 +231,10 @@ export default function ReservePage() {
   );
 }
 
+export default function ReservePage() {
+  return (
+    <Suspense fallback={<div className="container mx-auto px-4 py-8"><p className="text-muted-foreground">読み込み中...</p></div>}>
+      <ReservePageContent />
+    </Suspense>
+  );
+}

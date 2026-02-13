@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -9,7 +9,7 @@ import { CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
 import { isViewMode, setViewMode, MOCK_RESERVATION } from '@/lib/view-mode';
 
-export default function SuccessPage() {
+function SuccessPageContent() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get('session_id');
   const [reservation, setReservation] = useState<any>(null);
@@ -93,9 +93,13 @@ export default function SuccessPage() {
   );
 }
 
-
-
-
+export default function SuccessPage() {
+  return (
+    <Suspense fallback={<div className="container mx-auto px-4 py-8"><p className="text-muted-foreground">読み込み中...</p></div>}>
+      <SuccessPageContent />
+    </Suspense>
+  );
+}
 
 
 

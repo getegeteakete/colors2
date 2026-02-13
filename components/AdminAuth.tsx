@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { isViewMode, setViewMode } from '@/lib/view-mode';
 
-export default function AdminAuth({ children }: { children: React.ReactNode }) {
+function AdminAuthContent({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -42,4 +42,12 @@ export default function AdminAuth({ children }: { children: React.ReactNode }) {
   }
 
   return <>{children}</>;
+}
+
+export default function AdminAuth({ children }: { children: React.ReactNode }) {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="text-muted-foreground">読み込み中...</div></div>}>
+      <AdminAuthContent>{children}</AdminAuthContent>
+    </Suspense>
+  );
 }

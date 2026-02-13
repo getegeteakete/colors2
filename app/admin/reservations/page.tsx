@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase/client';
 import { format } from 'date-fns';
@@ -51,7 +51,7 @@ type Reservation = {
   }>;
 };
 
-export default function ReservationsPage() {
+function ReservationsPageContent() {
   const searchParams = useSearchParams();
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [loading, setLoading] = useState(true);
@@ -287,5 +287,13 @@ export default function ReservationsPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ReservationsPage() {
+  return (
+    <Suspense fallback={<div className="p-6"><p className="text-muted-foreground">読み込み中...</p></div>}>
+      <ReservationsPageContent />
+    </Suspense>
   );
 }

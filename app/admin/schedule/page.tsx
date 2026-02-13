@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase/client';
 import { format, addDays, startOfWeek, endOfWeek, eachDayOfInterval, getDay } from 'date-fns';
@@ -30,7 +30,7 @@ type Schedule = {
 const timeSlots = ['11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'];
 const operatingDays = [2, 3, 4]; // 火、水、木
 
-export default function SchedulePage() {
+function SchedulePageContent() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [schedules, setSchedules] = useState<Schedule[]>([]);
   const [loading, setLoading] = useState(true);
@@ -303,5 +303,13 @@ export default function SchedulePage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function SchedulePage() {
+  return (
+    <Suspense fallback={<div className="p-6"><p className="text-muted-foreground">読み込み中...</p></div>}>
+      <SchedulePageContent />
+    </Suspense>
   );
 }
