@@ -1,24 +1,42 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { Lock } from 'lucide-react';
+import { isViewMode, setViewMode } from '@/lib/view-mode';
 
 export default function AdminLoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && (searchParams.get('view') === '1' || isViewMode())) {
+      setViewMode();
+    }
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
+      if (typeof window !== 'undefined' && (searchParams.get('view') === '1' || isViewMode())) {
+        setViewMode();
+        sessionStorage.setItem('admin_logged_in', 'true');
+        sessionStorage.setItem('view_mode', '1');
+        toast.success('ログインに成功しました');
+        router.push('/admin?view=1');
+        setLoading(false);
+        return;
+      }
+
       // サーバーでパスワードを検証
       const response = await fetch('/api/admin/login', {
         method: 'POST',
@@ -29,7 +47,6 @@ export default function AdminLoginPage() {
       const data = await response.json();
 
       if (response.ok && data.success) {
-        // セッションストレージにログイン状態を保存
         sessionStorage.setItem('admin_logged_in', 'true');
         toast.success('ログインに成功しました');
         router.push('/admin');

@@ -1,24 +1,29 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/lib/supabase/client';
 import { CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
+import { isViewMode, setViewMode, MOCK_RESERVATION } from '@/lib/view-mode';
 
 export default function SuccessPage() {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const sessionId = searchParams.get('session_id');
   const [reservation, setReservation] = useState<any>(null);
 
   useEffect(() => {
+    if (typeof window !== 'undefined' && (searchParams.get('view') === '1' || isViewMode())) {
+      setViewMode();
+      setReservation(MOCK_RESERVATION);
+      return;
+    }
     if (sessionId) {
       fetchReservation();
     }
-  }, [sessionId]);
+  }, [sessionId, searchParams]);
 
   const fetchReservation = async () => {
     try {

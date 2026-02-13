@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import { isViewMode } from '@/lib/view-mode';
 import {
   LayoutDashboard,
   Calendar,
@@ -46,11 +47,13 @@ const menuItems = [
 export default function AdminSidebar() {
   const pathname = usePathname();
   const router = useRouter();
+  const viewQ = typeof window !== 'undefined' && isViewMode() ? '?view=1' : '';
 
   const handleLogout = () => {
     sessionStorage.removeItem('admin_logged_in');
+    sessionStorage.removeItem('view_mode');
     toast.success('ログアウトしました');
-    router.push('/admin/login');
+    router.push('/admin/login' + viewQ);
   };
 
   return (
@@ -66,7 +69,7 @@ export default function AdminSidebar() {
             return (
               <li key={item.href}>
                 <Link
-                  href={item.href}
+                  href={item.href + viewQ}
                   className={cn(
                     'flex items-center gap-3 px-3 py-2 rounded text-sm font-medium transition-colors',
                     isActive

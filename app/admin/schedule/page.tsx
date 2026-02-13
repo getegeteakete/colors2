@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase/client';
 import { format, addDays, startOfWeek, endOfWeek, eachDayOfInterval, getDay } from 'date-fns';
 import { ja } from 'date-fns/locale';
@@ -9,6 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Calendar } from '@/components/ui/calendar';
 import { toast } from 'sonner';
 import { ChevronLeft, ChevronRight, RefreshCw, Plus } from 'lucide-react';
+import { isViewMode, setViewMode, MOCK_ADMIN_SCHEDULES } from '@/lib/view-mode';
 import {
   Select,
   SelectContent,
@@ -34,9 +36,17 @@ export default function SchedulePage() {
   const [loading, setLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
 
+  const searchParams = useSearchParams();
+
   useEffect(() => {
+    if (typeof window !== 'undefined' && (searchParams.get('view') === '1' || isViewMode())) {
+      setViewMode();
+      setSchedules(MOCK_ADMIN_SCHEDULES as Schedule[]);
+      setLoading(false);
+      return;
+    }
     fetchSchedules();
-  }, [currentDate]);
+  }, [currentDate, searchParams]);
 
   const fetchSchedules = async () => {
     try {

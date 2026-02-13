@@ -1,9 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase/client';
 import { format } from 'date-fns';
 import { ja } from 'date-fns/locale';
+import { isViewMode, setViewMode, MOCK_ADMIN_RESERVATIONS } from '@/lib/view-mode';
 import {
   Table,
   TableBody,
@@ -50,13 +52,20 @@ type Reservation = {
 };
 
 export default function ReservationsPage() {
+  const searchParams = useSearchParams();
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<string>('all');
 
   useEffect(() => {
+    if (typeof window !== 'undefined' && (searchParams.get('view') === '1' || isViewMode())) {
+      setViewMode();
+      setReservations(MOCK_ADMIN_RESERVATIONS as Reservation[]);
+      setLoading(false);
+      return;
+    }
     fetchReservations();
-  }, [statusFilter]);
+  }, [statusFilter, searchParams]);
 
   const fetchReservations = async () => {
     try {

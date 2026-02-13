@@ -1,11 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase/client';
 import { Calendar, DollarSign, CheckCircle, Clock } from 'lucide-react';
+import { isViewMode, setViewMode, MOCK_ADMIN_STATS } from '@/lib/view-mode';
 
 export default function AdminDashboardPage() {
+  const searchParams = useSearchParams();
   const [stats, setStats] = useState({
     todayReservations: 0,
     weekReservations: 0,
@@ -13,6 +16,7 @@ export default function AdminDashboardPage() {
     completedReservations: 0,
   });
   const [loading, setLoading] = useState(true);
+  const viewQ = typeof window !== 'undefined' && (searchParams.get('view') === '1' || isViewMode()) ? '?view=1' : '';
 
   const fetchStats = async () => {
     try {
@@ -65,8 +69,14 @@ export default function AdminDashboardPage() {
   };
 
   useEffect(() => {
+    if (typeof window !== 'undefined' && (searchParams.get('view') === '1' || isViewMode())) {
+      setViewMode();
+      setStats(MOCK_ADMIN_STATS);
+      setLoading(false);
+      return;
+    }
     fetchStats();
-  }, []);
+  }, [searchParams]);
 
   if (loading) {
     return (
@@ -121,7 +131,7 @@ export default function AdminDashboardPage() {
         <div className="p-5">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Link
-              href="/admin/reservations"
+              href={`/admin/reservations${viewQ}`}
               className="block p-4 border border-[#c3c4c7] rounded hover:border-[#0073aa] hover:bg-[#f0f6fc] transition-colors"
             >
               <div className="flex items-center gap-3">
@@ -134,7 +144,7 @@ export default function AdminDashboardPage() {
             </Link>
 
             <Link
-              href="/admin/payments"
+              href={`/admin/payments${viewQ}`}
               className="block p-4 border border-[#c3c4c7] rounded hover:border-[#0073aa] hover:bg-[#f0f6fc] transition-colors"
             >
               <div className="flex items-center gap-3">
@@ -147,7 +157,7 @@ export default function AdminDashboardPage() {
             </Link>
 
             <Link
-              href="/admin/schedule"
+              href={`/admin/schedule${viewQ}`}
               className="block p-4 border border-[#c3c4c7] rounded hover:border-[#0073aa] hover:bg-[#f0f6fc] transition-colors"
             >
               <div className="flex items-center gap-3">

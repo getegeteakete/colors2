@@ -12,6 +12,10 @@ export const metadata: Metadata = {
   title: "現地調査予約サイト",
   description: "現地調査の予約・決済・Zoomミーティング管理システム",
   viewport: "width=device-width, initial-scale=1",
+  icons: {
+    icon: "/logo.png",
+    apple: "/logo.png",
+  },
 };
 
 export default function RootLayout({

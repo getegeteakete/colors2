@@ -16,6 +16,9 @@ import { supabase } from '@/lib/supabase/client';
 import { toast } from 'sonner';
 import { Upload, X } from 'lucide-react';
 import { getReservedTimeSlots } from '@/lib/schedule';
+import { isViewMode, setViewMode, MOCK_RESERVATION_ID } from '@/lib/view-mode';
+import { format } from 'date-fns';
+import { ja } from 'date-fns/locale';
 
 const formSchema = z.object({
   name: z.string().min(1, '名前を入力してください'),
@@ -54,6 +57,12 @@ export default function ReserveFormPage() {
   useEffect(() => {
     form.setValue('type', type);
   }, [type, form]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && (searchParams.get('view') === '1' || isViewMode())) {
+      setViewMode();
+    }
+  }, [searchParams]);
 
   const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -130,6 +139,13 @@ export default function ReserveFormPage() {
   const onSubmit = async (values: FormValues) => {
     if (!date || !time) {
       toast.error('日時が選択されていません');
+      return;
+    }
+
+    if (typeof window !== 'undefined' && (searchParams.get('view') === '1' || isViewMode())) {
+      setViewMode();
+      toast.success('予約が完了しました');
+      router.push(`/reserve/checkout?reservation_id=${MOCK_RESERVATION_ID}&view=1`);
       return;
     }
 
@@ -251,7 +267,7 @@ export default function ReserveFormPage() {
           <CardHeader>
             <CardTitle>予約フォーム</CardTitle>
             <CardDescription>
-              {date && time && `${date} ${time}`}
+              {date && time && `${format(new Date(date + 'T12:00:00'), 'yyyy年M月d日', { locale: ja })} ${time}`}
             </CardDescription>
           </CardHeader>
           <CardContent>

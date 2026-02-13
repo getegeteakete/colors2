@@ -1,9 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase/client';
 import { format } from 'date-fns';
 import { ja } from 'date-fns/locale';
+import { isViewMode, setViewMode, MOCK_ADMIN_PAYMENTS } from '@/lib/view-mode';
 import {
   Table,
   TableBody,
@@ -47,13 +49,20 @@ type Payment = {
 };
 
 export default function PaymentsPage() {
+  const searchParams = useSearchParams();
   const [payments, setPayments] = useState<Payment[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<string>('all');
 
   useEffect(() => {
+    if (typeof window !== 'undefined' && (searchParams.get('view') === '1' || isViewMode())) {
+      setViewMode();
+      setPayments(MOCK_ADMIN_PAYMENTS as Payment[]);
+      setLoading(false);
+      return;
+    }
     fetchPayments();
-  }, [statusFilter]);
+  }, [statusFilter, searchParams]);
 
   const fetchPayments = async () => {
     try {

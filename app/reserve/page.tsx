@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Calendar } from '@/components/ui/calendar';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -10,6 +10,7 @@ import { supabase } from '@/lib/supabase/client';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 import Link from 'next/link';
+import { isViewMode, setViewMode, MOCK_SCHEDULES } from '@/lib/view-mode';
 
 type TimeSlot = {
   time: string;
@@ -23,13 +24,20 @@ type ScheduleData = {
 
 export default function ReservePage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [schedules, setSchedules] = useState<ScheduleData[]>([]);
   const [loading, setLoading] = useState(true);
-
   useEffect(() => {
+    const view = searchParams.get('view') === '1' || isViewMode();
+    if (view) {
+      setViewMode();
+      setSchedules(MOCK_SCHEDULES as ScheduleData[]);
+      setLoading(false);
+      return;
+    }
     fetchSchedules();
-  }, []);
+  }, [searchParams]);
 
   const fetchSchedules = async () => {
     try {
@@ -108,7 +116,8 @@ export default function ReservePage() {
   const handleTimeSlotClick = (time: string) => {
     if (!selectedDate) return;
     const dateStr = format(selectedDate, 'yyyy-MM-dd');
-    router.push(`/reserve/form?date=${dateStr}&time=${time}`);
+    const viewQ = searchParams.get('view') === '1' || isViewMode() ? '&view=1' : '';
+    router.push(`/reserve/form?date=${dateStr}&time=${time}${viewQ}`);
   };
 
   const availableDates = schedules.map((s) => new Date(s.date));

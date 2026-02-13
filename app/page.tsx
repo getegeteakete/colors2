@@ -361,6 +361,11 @@ export default function Home() {
                     マイページ
                   </Link>
                 </li>
+                <li>
+                  <Link href="/view" className="hover:text-foreground transition-colors">
+                    画面一覧
+                  </Link>
+                </li>
               </ul>
             </div>
             <div>

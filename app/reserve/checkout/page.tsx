@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { supabase } from '@/lib/supabase/client';
 import { toast } from 'sonner';
 import { CreditCard, Wallet, Building2, CheckCircle2 } from 'lucide-react';
+import { isViewMode, setViewMode, MOCK_RESERVATION } from '@/lib/view-mode';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
@@ -25,10 +26,15 @@ export default function CheckoutPage() {
   const [bankInfo, setBankInfo] = useState<any>(null);
 
   useEffect(() => {
+    if (typeof window !== 'undefined' && (searchParams.get('view') === '1' || isViewMode())) {
+      setViewMode();
+      setReservation(MOCK_RESERVATION as any);
+      return;
+    }
     if (reservationId) {
       fetchReservation();
     }
-  }, [reservationId]);
+  }, [reservationId, searchParams]);
 
   const fetchReservation = async () => {
     try {
@@ -93,6 +99,13 @@ export default function CheckoutPage() {
 
   const handleCheckout = async () => {
     if (!reservationId) return;
+
+    if (typeof window !== 'undefined' && (searchParams.get('view') === '1' || isViewMode())) {
+      setViewMode();
+      toast.success('決済が完了しました');
+      router.push(`/reserve/success?session_id=view-session-1&view=1`);
+      return;
+    }
 
     // 銀行振り込みの場合は別処理
     if (paymentMethod === 'bank_transfer') {

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -8,21 +9,32 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { supabase } from '@/lib/supabase/client';
 import { Download, ExternalLink } from 'lucide-react';
+import { isViewMode, setViewMode, MOCK_MYPAGE_RESERVATIONS, MOCK_MYPAGE_PAYMENTS, MOCK_RESERVATION } from '@/lib/view-mode';
 
 export default function MypagePage() {
+  const searchParams = useSearchParams();
   const [reservations, setReservations] = useState<any[]>([]);
   const [payments, setPayments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [userEmail, setUserEmail] = useState('');
 
   useEffect(() => {
-    // 簡易的な実装: 実際には認証が必要
+    if (typeof window !== 'undefined' && (searchParams.get('view') === '1' || isViewMode())) {
+      setViewMode();
+      setUserEmail(MOCK_RESERVATION.users.email);
+      setReservations(MOCK_MYPAGE_RESERVATIONS);
+      setPayments(MOCK_MYPAGE_PAYMENTS);
+      setLoading(false);
+      return;
+    }
     const email = localStorage.getItem('user_email') || '';
     setUserEmail(email);
     if (email) {
       fetchData(email);
+    } else {
+      setLoading(false);
     }
-  }, []);
+  }, [searchParams]);
 
   const fetchData = async (email: string) => {
     try {
