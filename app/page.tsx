@@ -78,56 +78,62 @@ export default function Home() {
             </p>
           </div>
           <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            <Card className="p-8 hover:shadow-lg transition-shadow">
-              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6">
-                <Brush className="w-8 h-8 text-primary" />
+            <Card className="relative overflow-hidden p-8 hover:shadow-lg transition-shadow min-h-[320px] bg-cover bg-center bg-no-repeat border-0" style={{ backgroundImage: "url('/tosou.png')" }}>
+              <div className="absolute inset-0 bg-black/50" aria-hidden />
+              <div className="relative z-10">
+                <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mb-6">
+                  <Brush className="w-8 h-8 text-white" />
+                </div>
+                <CardTitle className="text-2xl mb-4 text-white">塗装サービス</CardTitle>
+                <CardDescription className="text-base mb-4 text-white/95">
+                  住宅の外壁や内装の塗装から、施設・車体まで幅広く対応
+                </CardDescription>
+                <ul className="space-y-2 text-white/90">
+                  <li className="flex items-start">
+                    <CheckCircle2 className="w-5 h-5 text-primary mr-2 mt-0.5 flex-shrink-0" />
+                    <span>住宅の外壁や内装の塗装</span>
+                  </li>
+                  <li className="flex items-start">
+                    <CheckCircle2 className="w-5 h-5 text-primary mr-2 mt-0.5 flex-shrink-0" />
+                    <span>施設の外装・内装塗装（商業施設・オフィスビルなど）</span>
+                  </li>
+                  <li className="flex items-start">
+                    <CheckCircle2 className="w-5 h-5 text-primary mr-2 mt-0.5 flex-shrink-0" />
+                    <span>車体塗装</span>
+                  </li>
+                </ul>
               </div>
-              <CardTitle className="text-2xl mb-4">塗装サービス</CardTitle>
-              <CardDescription className="text-base mb-4">
-                住宅の外壁や内装の塗装から、施設・車体まで幅広く対応
-              </CardDescription>
-              <ul className="space-y-2 text-muted-foreground">
-                <li className="flex items-start">
-                  <CheckCircle2 className="w-5 h-5 text-primary mr-2 mt-0.5 flex-shrink-0" />
-                  <span>住宅の外壁や内装の塗装</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle2 className="w-5 h-5 text-primary mr-2 mt-0.5 flex-shrink-0" />
-                  <span>施設の外装・内装塗装（商業施設・オフィスビルなど）</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle2 className="w-5 h-5 text-primary mr-2 mt-0.5 flex-shrink-0" />
-                  <span>車体塗装</span>
-                </li>
-              </ul>
             </Card>
             
-            <Card className="p-8 hover:shadow-lg transition-shadow">
-              <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mb-6">
-                <Wrench className="w-8 h-8 text-accent" />
+            <Card className="relative overflow-hidden p-8 hover:shadow-lg transition-shadow min-h-[320px] bg-cover bg-center bg-no-repeat border-0" style={{ backgroundImage: "url('/rifo.png')" }}>
+              <div className="absolute inset-0 bg-black/50" aria-hidden />
+              <div className="relative z-10">
+                <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mb-6">
+                  <Wrench className="w-8 h-8 text-white" />
+                </div>
+                <CardTitle className="text-2xl mb-4 text-white">リフォームサービス</CardTitle>
+                <CardDescription className="text-base mb-4 text-white/95">
+                  快適な住まいづくりをサポートする幅広いリフォームサービス
+                </CardDescription>
+                <ul className="space-y-2 text-white/90">
+                  <li className="flex items-start">
+                    <CheckCircle2 className="w-5 h-5 text-accent mr-2 mt-0.5 flex-shrink-0" />
+                    <span>キッチンやバスルームのリフォーム</span>
+                  </li>
+                  <li className="flex items-start">
+                    <CheckCircle2 className="w-5 h-5 text-accent mr-2 mt-0.5 flex-shrink-0" />
+                    <span>間取りの変更</span>
+                  </li>
+                  <li className="flex items-start">
+                    <CheckCircle2 className="w-5 h-5 text-accent mr-2 mt-0.5 flex-shrink-0" />
+                    <span>収納の増設</span>
+                  </li>
+                  <li className="flex items-start">
+                    <CheckCircle2 className="w-5 h-5 text-accent mr-2 mt-0.5 flex-shrink-0" />
+                    <span>その他住宅リフォーム全般</span>
+                  </li>
+                </ul>
               </div>
-              <CardTitle className="text-2xl mb-4">リフォームサービス</CardTitle>
-              <CardDescription className="text-base mb-4">
-                快適な住まいづくりをサポートする幅広いリフォームサービス
-              </CardDescription>
-              <ul className="space-y-2 text-muted-foreground">
-                <li className="flex items-start">
-                  <CheckCircle2 className="w-5 h-5 text-accent mr-2 mt-0.5 flex-shrink-0" />
-                  <span>キッチンやバスルームのリフォーム</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle2 className="w-5 h-5 text-accent mr-2 mt-0.5 flex-shrink-0" />
-                  <span>間取りの変更</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle2 className="w-5 h-5 text-accent mr-2 mt-0.5 flex-shrink-0" />
-                  <span>収納の増設</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle2 className="w-5 h-5 text-accent mr-2 mt-0.5 flex-shrink-0" />
-                  <span>その他住宅リフォーム全般</span>
-                </li>
-              </ul>
             </Card>
           </div>
         </div>
