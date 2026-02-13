@@ -16,7 +16,7 @@ import { supabase } from '@/lib/supabase/client';
 import { toast } from 'sonner';
 import { Upload, X } from 'lucide-react';
 import { getReservedTimeSlots } from '@/lib/schedule';
-import { isViewMode, setViewMode, MOCK_RESERVATION_ID } from '@/lib/view-mode';
+import { isViewMode, setViewMode, MOCK_RESERVATION_ID, MOCK_RESERVATION } from '@/lib/view-mode';
 import { format } from 'date-fns';
 import { ja } from 'date-fns/locale';
 
@@ -61,6 +61,16 @@ function ReserveFormContent() {
   useEffect(() => {
     if (typeof window !== 'undefined' && (searchParams.get('view') === '1' || isViewMode())) {
       setViewMode();
+      form.reset({
+        name: MOCK_RESERVATION.users.name,
+        email: MOCK_RESERVATION.users.email,
+        phone: MOCK_RESERVATION.users.phone || '',
+        address: MOCK_RESERVATION.address || '',
+        content: MOCK_RESERVATION.content || '外壁塗装の現地調査をご希望です。',
+        type: MOCK_RESERVATION.type as 'onsite' | 'zoom',
+      });
+      setType(MOCK_RESERVATION.type as 'onsite' | 'zoom');
+      setAiEstimate({ price: 50000, duration: 60 });
     }
   }, [searchParams]);
 

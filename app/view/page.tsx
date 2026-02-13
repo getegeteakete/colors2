@@ -28,10 +28,10 @@ export default function ViewPage() {
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-12">
             <h1 className="text-3xl md:text-4xl font-bold mb-2 text-foreground">
-              画面一覧
+              サイトマップ
             </h1>
             <p className="text-muted-foreground">
-              各画面へ移動して動作を確認できます
+              メニュー
             </p>
           </div>
 
@@ -83,7 +83,7 @@ export default function ViewPage() {
 
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">お客様向け</CardTitle>
+                <CardTitle className="text-lg">お客様</CardTitle>
                 <CardDescription>マイページ</CardDescription>
               </CardHeader>
               <CardContent>
@@ -102,7 +102,7 @@ export default function ViewPage() {
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg">管理画面</CardTitle>
-                <CardDescription>ログイン後、ダッシュボード・予約・決済・スケジュール・設定</CardDescription>
+                <CardDescription>ダッシュボード・予約・決済・スケジュール・設定</CardDescription>
               </CardHeader>
               <CardContent className="space-y-2">
                 <Link href={`/admin/login?${q}`}>
@@ -114,9 +114,6 @@ export default function ViewPage() {
                     <ArrowRight className="h-4 w-4" />
                   </Button>
                 </Link>
-                <p className="text-xs text-muted-foreground mt-2">
-                  ログイン後はダッシュボード・予約一覧・決済一覧・スケジュール・設定の各画面をご確認ください。
-                </p>
               </CardContent>
             </Card>
           </div>

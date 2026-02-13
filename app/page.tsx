@@ -373,7 +373,7 @@ export default function Home() {
                 </li>
                 <li>
                   <Link href="/view" className="hover:text-foreground transition-colors">
-                    画面一覧
+                    サイトマップ
                   </Link>
                 </li>
               </ul>

@@ -15,6 +15,8 @@ export function isViewMode(): boolean {
 export function setViewMode(): void {
   if (typeof window === 'undefined') return;
   sessionStorage.setItem(VIEW_MODE_KEY, '1');
+  sessionStorage.setItem('user_name', MOCK_RESERVATION.users.name);
+  sessionStorage.setItem('user_email', MOCK_RESERVATION.users.email);
 }
 
 export function getViewModeSearch(): string {
@@ -35,6 +37,7 @@ export const MOCK_RESERVATION = {
   address: '福岡県福岡市東区和白1丁目1番35号',
   content: '外壁塗装の現地調査をご希望です。',
   status: 'reserved',
+  ai_price: 50000,
   users: {
     id: 'view-user-1',
     name: '山田 太郎',

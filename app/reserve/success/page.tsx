@@ -55,7 +55,9 @@ function SuccessPageContent() {
               <CheckCircle2 className="h-16 w-16 text-green-500" />
             </div>
             <CardTitle>決済が完了しました</CardTitle>
-            <CardDescription>ご予約ありがとうございます</CardDescription>
+            <CardDescription>
+              {reservation?.users?.name ? `${reservation.users.name} 様、ご予約ありがとうございます` : 'ご予約ありがとうございます'}
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {reservation && (

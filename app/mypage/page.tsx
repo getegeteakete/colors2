@@ -77,6 +77,14 @@ function MypagePageContent() {
   };
 
   const getStatusBadge = (status: string) => {
+    const labels: { [key: string]: string } = {
+      reserved: '予約済み',
+      done: '完了',
+      estimated: '見積済み',
+      paid: '支払済み',
+      pending: '入金待ち',
+      refunded: '返金済み',
+    };
     const variants: { [key: string]: 'default' | 'secondary' | 'destructive' } = {
       reserved: 'default',
       done: 'secondary',
@@ -85,13 +93,17 @@ function MypagePageContent() {
       pending: 'secondary',
       refunded: 'destructive',
     };
-    return <Badge variant={variants[status] || 'default'}>{status}</Badge>;
+    return <Badge variant={variants[status] || 'default'}>{labels[status] || status}</Badge>;
   };
 
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold mb-6">マイページ</h1>
+        <h1 className="text-3xl font-bold mb-2">マイページ</h1>
+        {(searchParams.get('view') === '1' || isViewMode()) && (
+          <p className="text-muted-foreground mb-6">{MOCK_RESERVATION.users.name} 様　ログイン中</p>
+        )}
+        {!((searchParams.get('view') === '1' || isViewMode())) && <div className="mb-6" />}
 
         <Tabs defaultValue="reservations" className="space-y-4">
           <TabsList>
