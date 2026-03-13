@@ -357,6 +357,11 @@ export default function Home() {
               <h4 className="font-bold text-foreground mb-4">サービス</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li>
+                  <Link href="/cases" className="hover:text-foreground transition-colors">
+                    施工事例
+                  </Link>
+                </li>
+                <li>
                   <Link href="/reserve" className="hover:text-foreground transition-colors">
                     現地調査予約
                   </Link>

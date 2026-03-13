@@ -126,6 +126,92 @@ ${type === 'onsite' ? 'スタッフが指定の日時に現地に訪問いたし
   }
 }
 
+// ZOOMリマインド通知メール（前日送信想定）
+export async function sendZoomReminderEmail(data: ReservationEmailData) {
+  const { name, email, date, time, zoomUrl } = data;
+  const adminEmail = process.env.SMTP_USER || 'yoyaku@colors092.site';
+
+  const mailOptions = {
+    from: `"株式会社COLORS" <${adminEmail}>`,
+    to: email,
+    replyTo: adminEmail,
+    subject: '【リマインド】明日のZoom相談のご案内',
+    html: `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          body { font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background-color: #1e3a5f; color: white; padding: 20px; text-align: center; }
+          .content { background-color: #f9f9f9; padding: 30px; }
+          .info-box { background-color: white; border-left: 4px solid #1e3a5f; padding: 15px; margin: 20px 0; }
+          .zoom-btn { display: inline-block; background-color: #2D8CFF; color: white; padding: 14px 28px; text-decoration: none; border-radius: 6px; font-weight: bold; margin: 10px 0; }
+          .footer { text-align: center; padding: 20px; font-size: 12px; color: #666; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>Zoom相談リマインド</h1>
+          </div>
+          <div class="content">
+            <p>${name} 様</p>
+            <p>明日のZoom相談のお時間が近づいてまいりましたので、リマインドのご案内をお送りします。</p>
+            <div class="info-box">
+              <h3>ご予約内容</h3>
+              <p><strong>日時:</strong> ${date} ${time}</p>
+              <p><strong>種類:</strong> Zoom相談</p>
+              ${zoomUrl ? `<p><strong>Zoom URL:</strong> <a href="${zoomUrl}">${zoomUrl}</a></p>` : ''}
+            </div>
+            ${zoomUrl ? `
+            <p style="text-align:center;">
+              <a href="${zoomUrl}" class="zoom-btn">Zoomを開く</a>
+            </p>
+            ` : ''}
+            <p>お時間の5分前には入室準備をお願いいたします。</p>
+            <p>ご都合が悪くなった場合は、お早めに下記連絡先までご連絡ください。</p>
+          </div>
+          <div class="footer">
+            <p>株式会社COLORS</p>
+            <p>電話: 090-6120-2995（月〜金 9:00〜17:00）</p>
+            <p>メール: ${adminEmail}</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `,
+    text: `
+${name} 様
+
+明日のZoom相談のリマインドです。
+
+【予約内容】
+日時: ${date} ${time}
+種類: Zoom相談
+${zoomUrl ? `Zoom URL: ${zoomUrl}` : ''}
+
+お時間の5分前には入室準備をお願いいたします。
+ご都合が悪くなった場合はお早めにご連絡ください。
+
+---
+株式会社COLORS
+電話: 090-6120-2995
+メール: ${adminEmail}
+    `.trim(),
+  };
+
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Zoomリマインドメール送信成功:', info.messageId);
+    return { success: true, messageId: info.messageId };
+  } catch (error) {
+    console.error('Zoomリマインドメール送信エラー:', error);
+    throw error;
+  }
+}
+
 // 管理者への通知メール
 export async function sendAdminNotificationEmail(data: ReservationEmailData) {
   const { name, email, date, time, type, address, content, zoomUrl } = data;
@@ -196,3 +282,4 @@ ${zoomUrl ? `Zoom URL: ${zoomUrl}` : ''}
     throw error;
   }
 }
+

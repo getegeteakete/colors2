@@ -36,6 +36,9 @@ export default function Header() {
           <Link href="/flow" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
             利用方法
           </Link>
+          <Link href="/cases" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            施工事例
+          </Link>
           <Link href="/reserve" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
             予約する
           </Link>
