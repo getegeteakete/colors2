@@ -50,10 +50,10 @@ export default function CommercialTransactionPage() {
               <dt className="font-semibold text-muted-foreground">メールアドレス</dt>
               <dd>
                 <a
-                  href="mailto:yoyaku@colors092.site"
+                  href="mailto:s@colors092.site"
                   className="text-primary hover:underline"
                 >
-                  yoyaku@colors092.site
+                  s@colors092.site
                 </a>
               </dd>
             </dl>

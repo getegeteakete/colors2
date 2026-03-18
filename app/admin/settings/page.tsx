@@ -9,7 +9,7 @@ import { Save, Mail, Lock, Calendar } from 'lucide-react';
 
 export default function SettingsPage() {
   const [settings, setSettings] = useState({
-    adminEmail: process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'yoyaku@colors092.site',
+    adminEmail: process.env.NEXT_PUBLIC_ADMIN_EMAIL || 's@colors092.site',
     smtpHost: process.env.NEXT_PUBLIC_SMTP_HOST || '',
     smtpPort: process.env.NEXT_PUBLIC_SMTP_PORT || '587',
     operatingDays: '火,水,木',

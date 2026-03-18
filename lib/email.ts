@@ -6,7 +6,7 @@ const transporter = nodemailer.createTransport({
   port: parseInt(process.env.SMTP_PORT || '587'),
   secure: false, // TLSを使用
   auth: {
-    user: process.env.SMTP_USER || 'yoyaku@colors092.site',
+    user: process.env.SMTP_USER || 's@colors092.site',
     pass: process.env.SMTP_PASSWORD || '',
   },
 });
@@ -26,12 +26,12 @@ export interface ReservationEmailData {
 export async function sendReservationConfirmationEmail(data: ReservationEmailData) {
   const { name, email, date, time, type, address, content, zoomUrl } = data;
 
-  const adminEmail = process.env.SMTP_USER || 'yoyaku@colors092.site';
+  const adminEmail = process.env.SMTP_USER || 's@colors092.site';
   
   const mailOptions = {
     from: `"株式会社COLORS" <${adminEmail}>`,
     to: email,
-    bcc: adminEmail, // すべてのメールをyoyaku@colors092.siteでも受け取る
+    bcc: adminEmail, // すべてのメールをs@colors092.siteでも受け取る
     replyTo: adminEmail,
     subject: '【予約確認】現地調査のご予約を承りました',
     html: `
@@ -81,7 +81,7 @@ export async function sendReservationConfirmationEmail(data: ReservationEmailDat
           <div class="footer">
             <p>株式会社COLORS</p>
             <p>電話: 090-6120-2995（月〜金 9:00〜17:00）</p>
-            <p>メール: ${process.env.SMTP_USER || 'yoyaku@colors092.site'}</p>
+            <p>メール: ${process.env.SMTP_USER || 's@colors092.site'}</p>
             <p>福岡市を中心にご対応いたします。</p>
           </div>
         </div>
@@ -111,7 +111,7 @@ ${type === 'onsite' ? 'スタッフが指定の日時に現地に訪問いたし
 ---
 株式会社COLORS
 電話: 090-6120-2995（月〜金 9:00〜17:00）
-メール: ${process.env.SMTP_USER || 'yoyaku@colors092.site'}
+メール: ${process.env.SMTP_USER || 's@colors092.site'}
 福岡市を中心にご対応いたします。
     `.trim(),
   };
@@ -129,7 +129,7 @@ ${type === 'onsite' ? 'スタッフが指定の日時に現地に訪問いたし
 // ZOOMリマインド通知メール（前日送信想定）
 export async function sendZoomReminderEmail(data: ReservationEmailData) {
   const { name, email, date, time, zoomUrl } = data;
-  const adminEmail = process.env.SMTP_USER || 'yoyaku@colors092.site';
+  const adminEmail = process.env.SMTP_USER || 's@colors092.site';
 
   const mailOptions = {
     from: `"株式会社COLORS" <${adminEmail}>`,
@@ -215,7 +215,7 @@ ${zoomUrl ? `Zoom URL: ${zoomUrl}` : ''}
 // 管理者への通知メール
 export async function sendAdminNotificationEmail(data: ReservationEmailData) {
   const { name, email, date, time, type, address, content, zoomUrl } = data;
-  const adminEmail = process.env.SMTP_USER || 'yoyaku@colors092.site';
+  const adminEmail = process.env.SMTP_USER || 's@colors092.site';
 
   const mailOptions = {
     from: `"予約システム" <${adminEmail}>`,
