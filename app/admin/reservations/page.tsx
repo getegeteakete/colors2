@@ -24,7 +24,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { toast } from 'sonner';
-import { Eye, RefreshCw } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Eye, RefreshCw, Search } from 'lucide-react';
 import Link from 'next/link';
 
 type Reservation = {
@@ -56,6 +57,8 @@ function ReservationsPageContent() {
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [searchName, setSearchName] = useState<string>('');
+  const [searchDate, setSearchDate] = useState<string>('');
 
   useEffect(() => {
     if (typeof window !== 'undefined' && (searchParams.get('view') === '1' || isViewMode())) {
@@ -65,7 +68,7 @@ function ReservationsPageContent() {
       return;
     }
     fetchReservations();
-  }, [statusFilter, searchParams]);
+  }, [statusFilter, searchName, searchDate, searchParams]);
 
   const fetchReservations = async () => {
     try {
@@ -87,6 +90,9 @@ function ReservationsPageContent() {
 
       if (statusFilter !== 'all') {
         query = query.eq('status', statusFilter);
+      }
+      if (searchDate) {
+        query = query.eq('date', searchDate);
       }
 
       const { data, error } = await query;
@@ -148,9 +154,24 @@ function ReservationsPageContent() {
   return (
     <div className="space-y-4">
       <div className="bg-white border border-[#c3c4c7] rounded shadow-sm">
-        <div className="px-5 py-4 border-b border-[#c3c4c7] flex items-center justify-between">
+        <div className="px-5 py-4 border-b border-[#c3c4c7] flex flex-wrap items-center gap-3 justify-between">
           <h2 className="text-base font-semibold text-[#23282d]">予約一覧</h2>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="relative">
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[#646970]" />
+              <Input
+                className="pl-8 h-9 w-40 border-[#c3c4c7] text-sm"
+                placeholder="お客様名で検索"
+                value={searchName}
+                onChange={e => setSearchName(e.target.value)}
+              />
+            </div>
+            <Input
+              type="date"
+              className="h-9 w-40 border-[#c3c4c7] text-sm"
+              value={searchDate}
+              onChange={e => setSearchDate(e.target.value)}
+            />
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="w-40">
                 <SelectValue placeholder="ステータスで絞り込み" />
@@ -194,7 +215,9 @@ function ReservationsPageContent() {
                   </TableCell>
                 </TableRow>
               ) : (
-                reservations.map((reservation) => (
+                reservations
+                  .filter(r => !searchName || r.users.name.includes(searchName) || r.users.email.includes(searchName))
+                  .map((reservation) => (
                   <TableRow key={reservation.id}>
                     <TableCell className="text-[#23282d]">
                       <div>
