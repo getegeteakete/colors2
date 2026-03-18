@@ -25,6 +25,11 @@ function AdminAuthContent({ children }: { children: React.ReactNode }) {
     if (!loggedIn && pathname !== '/admin/login') {
       router.push('/admin/login');
     }
+
+    // ログイン済みでログインページにいる場合はダッシュボードへ
+    if (loggedIn && pathname === '/admin/login') {
+      router.push('/admin');
+    }
   }, [router, pathname, searchParams]);
 
   // ログイン状態の確認中
@@ -38,7 +43,12 @@ function AdminAuthContent({ children }: { children: React.ReactNode }) {
 
   // ログインしていない場合
   if (!isAuthenticated && pathname !== '/admin/login') {
-    return null; // リダイレクトが進行中
+    return null;
+  }
+
+  // ログインページはサイドバー・ヘッダーなしで表示
+  if (pathname === '/admin/login') {
+    return <>{children}</>;
   }
 
   return <>{children}</>;

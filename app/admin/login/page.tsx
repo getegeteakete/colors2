@@ -94,17 +94,7 @@ function AdminLoginContent() {
             </Button>
           </form>
           <div className="mt-4 text-center text-sm text-muted-foreground">
-            <p>※ デフォルトパスワードは環境変数で設定できます</p>
-            <p className="mt-2 text-xs">
-              <code className="bg-muted px-2 py-1 rounded">
-                ADMIN_PASSWORD
-              </code>
-              または
-              <code className="bg-muted px-2 py-1 rounded ml-1">
-                NEXT_PUBLIC_ADMIN_PASSWORD
-              </code>
-            </p>
-            <p className="mt-2 text-xs">デフォルト: admin123</p>
+            <p className="text-xs">パスワードをお忘れの方は管理者にお問い合わせください</p>
           </div>
         </CardContent>
       </Card>
