@@ -146,7 +146,7 @@ function ReserveFormContent() {
     }
   };
 
-  const onSubmit = async (values: FormValues) => {
+  const onSubmit = async (values: FormValues, payNow: boolean = true) => {
     if (!date || !time) {
       toast.error('日時が選択されていません');
       return;
@@ -155,7 +155,11 @@ function ReserveFormContent() {
     if (typeof window !== 'undefined' && (searchParams.get('view') === '1' || isViewMode())) {
       setViewMode();
       toast.success('予約が完了しました');
-      router.push(`/reserve/checkout?reservation_id=${MOCK_RESERVATION_ID}&view=1`);
+      if (payNow) {
+        router.push(`/reserve/checkout?reservation_id=${MOCK_RESERVATION_ID}&view=1`);
+      } else {
+        router.push(`/reserve/success?reservation_id=${MOCK_RESERVATION_ID}&view=1`);
+      }
       return;
     }
 
@@ -263,7 +267,11 @@ function ReserveFormContent() {
       }
 
       toast.success('予約が完了しました');
-      router.push(`/reserve/checkout?reservation_id=${reservation.id}`);
+      if (payNow) {
+        router.push(`/reserve/checkout?reservation_id=${reservation.id}`);
+      } else {
+        router.push(`/reserve/success?reservation_id=${reservation.id}&skip_payment=1`);
+      }
     } catch (error) {
       console.error('Error creating reservation:', error);
       toast.error('予約の作成に失敗しました');
@@ -315,7 +323,7 @@ function ReserveFormContent() {
               </TabsList>
 
               <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 mt-6">
+                <form onSubmit={form.handleSubmit((values) => onSubmit(values, true))} className="space-y-6 mt-6">
                   <FormField
                     control={form.control}
                     name="name"
@@ -442,9 +450,30 @@ function ReserveFormContent() {
                     )}
                   </div>
 
-                  <Button type="submit" className="w-full" size="lg">
-                    決済へ進む
-                  </Button>
+                  {/* 決済方法の選択 */}
+                  <div className="border rounded-lg p-4 space-y-3">
+                    <p className="font-semibold text-sm">お支払い方法を選択してください</p>
+                    <p className="text-xs text-muted-foreground">※現地調査費用は調査後にお見積りをご提示します</p>
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                      <Button
+                        type="submit"
+                        size="lg"
+                        className="w-full"
+                        onClick={() => form.setValue('payNow' as any, true)}
+                      >
+                        💳 今すぐ決済して予約
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="lg"
+                        className="w-full"
+                        onClick={form.handleSubmit((values) => onSubmit(values, false))}
+                      >
+                        📋 予約のみ（後で決済）
+                      </Button>
+                    </div>
+                  </div>
                 </form>
               </Form>
             </Tabs>

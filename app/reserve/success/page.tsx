@@ -12,6 +12,8 @@ import { isViewMode, setViewMode, MOCK_RESERVATION } from '@/lib/view-mode';
 function SuccessPageContent() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get('session_id');
+  const reservationId = searchParams.get('reservation_id');
+  const skipPayment = searchParams.get('skip_payment') === '1';
   const [reservation, setReservation] = useState<any>(null);
 
   useEffect(() => {
@@ -21,26 +23,35 @@ function SuccessPageContent() {
       return;
     }
     if (sessionId) {
-      fetchReservation();
+      fetchReservationBySession();
+    } else if (reservationId) {
+      fetchReservationById();
     }
-  }, [sessionId, searchParams]);
+  }, [sessionId, reservationId, searchParams]);
 
-  const fetchReservation = async () => {
+  const fetchReservationBySession = async () => {
     try {
-      if (!supabase) {
-        console.error('Supabaseが設定されていません');
-        return;
-      }
-
+      if (!supabase) return;
       const { data: payment } = await supabase
         .from('payments')
         .select('*, reservations(*, users(*))')
         .eq('stripe_intent', sessionId)
         .single();
+      if (payment) setReservation(payment.reservations);
+    } catch (error) {
+      console.error('Error fetching reservation:', error);
+    }
+  };
 
-      if (payment) {
-        setReservation(payment.reservations);
-      }
+  const fetchReservationById = async () => {
+    try {
+      if (!supabase) return;
+      const { data } = await supabase
+        .from('reservations')
+        .select('*, users(*)')
+        .eq('id', reservationId)
+        .single();
+      if (data) setReservation(data);
     } catch (error) {
       console.error('Error fetching reservation:', error);
     }
@@ -54,14 +65,18 @@ function SuccessPageContent() {
             <div className="flex justify-center mb-4">
               <CheckCircle2 className="h-16 w-16 text-green-500" />
             </div>
-            <CardTitle>決済が完了しました</CardTitle>
+            <CardTitle>
+              {skipPayment ? '予約が完了しました' : '決済が完了しました'}
+            </CardTitle>
             <CardDescription>
-              {reservation?.users?.name ? `${reservation.users.name} 様、ご予約ありがとうございます` : 'ご予約ありがとうございます'}
+              {reservation?.users?.name
+                ? `${reservation.users.name} 様、ご予約ありがとうございます`
+                : 'ご予約ありがとうございます'}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {reservation && (
-              <div>
+              <div className="bg-muted/50 rounded-lg p-4 space-y-2">
                 <h3 className="font-semibold mb-2">予約内容</h3>
                 <p>日時: {reservation.date} {reservation.time}</p>
                 <p>種類: {reservation.type === 'onsite' ? '訪問調査' : 'Zoom相談'}</p>
@@ -80,6 +95,15 @@ function SuccessPageContent() {
                 )}
               </div>
             )}
+
+            {/* 後払いの場合のメッセージ */}
+            {skipPayment && (
+              <div className="border border-yellow-300 bg-yellow-50 rounded-lg p-4 text-sm text-yellow-800">
+                <p className="font-semibold mb-1">💳 お支払いについて</p>
+                <p>現地調査後にお見積りをご提示いたします。マイページからいつでもお支払いいただけます。</p>
+              </div>
+            )}
+
             <div className="flex gap-4">
               <Link href="/mypage" className="flex-1">
                 <Button className="w-full">マイページへ</Button>
