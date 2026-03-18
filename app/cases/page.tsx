@@ -19,8 +19,8 @@ const cases = [
     tags: ["外壁", "屋根", "断熱塗料"],
     before: "外壁全体にひび割れ・色あせ",
     after: "新築同様の美観を回復",
-    beforeImg: "/cases/case1-before.svg",
-    afterImg: "/cases/case1-after.svg",
+    beforeImg: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=400&fit=crop",
+    afterImg: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&h=400&fit=crop",
   },
   {
     id: 2,
@@ -32,8 +32,8 @@ const cases = [
     tags: ["壁紙", "床材", "内装"],
     before: "古びた壁紙・フローリングの傷み",
     after: "モダンで清潔感のある室内に",
-    beforeImg: "/cases/case2-before.svg",
-    afterImg: "/cases/case2-after.svg",
+    beforeImg: "https://images.unsplash.com/photo-1574362848149-11496d93a7c7?w=600&h=400&fit=crop",
+    afterImg: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&h=400&fit=crop",
   },
   {
     id: 3,
@@ -45,8 +45,8 @@ const cases = [
     tags: ["店舗", "外装", "内装"],
     before: "古くなった外観で集客力が低下",
     after: "ブランドイメージに合った外観に一新",
-    beforeImg: "/cases/case3-before.svg",
-    afterImg: "/cases/case3-after.svg",
+    beforeImg: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&h=400&fit=crop",
+    afterImg: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&h=400&fit=crop",
   },
   {
     id: 4,
@@ -58,8 +58,8 @@ const cases = [
     tags: ["外壁", "防カビ", "二世帯"],
     before: "カビ・コケが発生し見栄えが悪化",
     after: "清潔感のある白い外壁を回復",
-    beforeImg: "/cases/case4-before.svg",
-    afterImg: "/cases/case4-after.svg",
+    beforeImg: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600&h=400&fit=crop",
+    afterImg: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=600&h=400&fit=crop",
   },
   {
     id: 5,
@@ -71,8 +71,8 @@ const cases = [
     tags: ["車体", "ラッピング", "業務車両"],
     before: "無地の業務用バン",
     after: "企業ブランドを訴求するデザインに",
-    beforeImg: "/cases/case5-before.svg",
-    afterImg: "/cases/case5-after.svg",
+    beforeImg: "https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=600&h=400&fit=crop",
+    afterImg: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=600&h=400&fit=crop",
   },
   {
     id: 6,
@@ -84,8 +84,8 @@ const cases = [
     tags: ["キッチン", "浴室", "設備交換"],
     before: "古い設備で使いにくく掃除も困難",
     after: "機能的で清掃しやすい最新設備に",
-    beforeImg: "/cases/case6-before.svg",
-    afterImg: "/cases/case6-after.svg",
+    beforeImg: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&h=400&fit=crop",
+    afterImg: "https://images.unsplash.com/photo-1556909172-54557c7e4fb7?w=600&h=400&fit=crop",
   },
 ];
 
