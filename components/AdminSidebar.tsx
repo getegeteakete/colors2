@@ -14,6 +14,7 @@ import {
   LogOut,
   PanelLeftClose,
   BookOpen,
+  Users,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
@@ -21,6 +22,7 @@ import { toast } from 'sonner';
 const menuItems = [
   { title: 'ダッシュボード', href: '/admin', icon: LayoutDashboard },
   { title: '予約管理', href: '/admin/reservations', icon: Calendar },
+  { title: '顧客管理', href: '/admin/customers', icon: Users },
   { title: '決済管理', href: '/admin/payments', icon: CreditCard },
   { title: 'スケジュール管理', href: '/admin/schedule', icon: Clock },
   { title: 'マニュアル', href: '/admin/manual', icon: BookOpen },
