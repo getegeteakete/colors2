@@ -25,7 +25,10 @@ import {
 } from '@/components/ui/select';
 import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
-import { Eye, RefreshCw, Search } from 'lucide-react';
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
+} from '@/components/ui/dialog';
+import { Eye, RefreshCw, Search, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 
 type Reservation = {
@@ -59,6 +62,8 @@ function ReservationsPageContent() {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [searchName, setSearchName] = useState<string>('');
   const [searchDate, setSearchDate] = useState<string>('');
+  const [deleteTarget, setDeleteTarget] = useState<Reservation | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined' && (searchParams.get('view') === '1' || isViewMode())) {
@@ -122,6 +127,35 @@ function ReservationsPageContent() {
     } catch (error: any) {
       console.error('Error updating status:', error);
       toast.error('ステータスの更新に失敗しました');
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!deleteTarget || !supabase) return;
+    setDeleting(true);
+    try {
+      // 支払いを先に削除（外部キー制約のため）
+      await supabase.from('payments').delete().eq('reservation_id', deleteTarget.id);
+      // 予約を削除
+      const { error } = await supabase.from('reservations').delete().eq('id', deleteTarget.id);
+      if (error) throw error;
+
+      // ユーザーの他の予約がなければユーザーも削除
+      const { data: otherReservations } = await supabase
+        .from('reservations')
+        .select('id')
+        .eq('user_id', (deleteTarget as any).user_id || '');
+      if (otherReservations && otherReservations.length === 0) {
+        await supabase.from('users').delete().eq('email', deleteTarget.users.email);
+      }
+
+      toast.success(`${deleteTarget.users.name}様の予約を削除しました`);
+      setDeleteTarget(null);
+      fetchReservations();
+    } catch (error: any) {
+      toast.error('削除に失敗しました: ' + error.message);
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -295,12 +329,22 @@ function ReservationsPageContent() {
                       )}
                     </TableCell>
                     <TableCell>
-                      <Link href={`/admin/reservations/${reservation.id}`}>
-                        <Button variant="outline" size="sm" className="border-[#c3c4c7]">
-                          <Eye className="h-4 w-4 mr-1" />
-                          詳細
+                      <div className="flex items-center gap-2">
+                        <Link href={`/admin/reservations/${reservation.id}`}>
+                          <Button variant="outline" size="sm" className="border-[#c3c4c7]">
+                            <Eye className="h-4 w-4 mr-1" />
+                            詳細
+                          </Button>
+                        </Link>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300"
+                          onClick={() => setDeleteTarget(reservation)}
+                        >
+                          <Trash2 className="h-4 w-4" />
                         </Button>
-                      </Link>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))
@@ -309,6 +353,55 @@ function ReservationsPageContent() {
           </Table>
         </div>
       </div>
+      </div>
+
+      {/* 削除確認ダイアログ */}
+      <Dialog open={!!deleteTarget} onOpenChange={() => setDeleteTarget(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-red-600">
+              <Trash2 className="h-5 w-5" />予約を削除
+            </DialogTitle>
+            <DialogDescription>
+              この操作は取り消せません。本当に削除しますか？
+            </DialogDescription>
+          </DialogHeader>
+          {deleteTarget && (
+            <div className="bg-muted rounded-lg p-4 space-y-2 text-sm my-2">
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">お客様名</span>
+                <span className="font-medium">{deleteTarget.users.name} 様</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">メール</span>
+                <span>{deleteTarget.users.email}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">予約日時</span>
+                <span>{deleteTarget.date} {deleteTarget.time?.slice(0,5)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">種類</span>
+                <span>{deleteTarget.type === 'onsite' ? '訪問調査' : 'Zoom相談'}</span>
+              </div>
+            </div>
+          )}
+          <p className="text-xs text-muted-foreground">
+            ※ 関連する支払い情報も同時に削除されます。他に予約がない場合はお客様情報も削除されます。
+          </p>
+          <DialogFooter className="gap-2">
+            <Button variant="outline" onClick={() => setDeleteTarget(null)}>キャンセル</Button>
+            <Button
+              variant="destructive"
+              onClick={handleDelete}
+              disabled={deleting}
+            >
+              <Trash2 className="h-4 w-4 mr-2" />
+              {deleting ? '削除中...' : '削除する'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
