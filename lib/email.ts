@@ -25,7 +25,7 @@ export async function sendReservationConfirmationEmail(data: ReservationEmailDat
     from: `${FROM_NAME} <${FROM_EMAIL}>`,
     to: [email],
     bcc: [ADMIN_EMAIL],
-    reply_to: ADMIN_EMAIL,
+    replyTo: ADMIN_EMAIL,
     subject: '【予約確認】現地調査のご予約を承りました',
     html: `
       <!DOCTYPE html>
@@ -85,7 +85,7 @@ export async function sendZoomReminderEmail(data: ReservationEmailData) {
   const { data: result, error } = await resend.emails.send({
     from: `${FROM_NAME} <${FROM_EMAIL}>`,
     to: [email],
-    reply_to: ADMIN_EMAIL,
+    replyTo: ADMIN_EMAIL,
     subject: '【リマインド】明日のZoom相談のご案内',
     html: `
       <!DOCTYPE html>
