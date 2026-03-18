@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/lib/supabase/client';
-import { format } from 'date-fns';
+import { format, addDays } from 'date-fns';
 import { toast } from 'sonner';
 import Link from 'next/link';
 import { isViewMode, setViewMode, MOCK_SCHEDULES } from '@/lib/view-mode';
@@ -53,7 +53,7 @@ function ReservePageContent() {
         .from('schedules')
         .select('*')
         .eq('available', true)
-        .gte('date', format(new Date(), 'yyyy-MM-dd'))
+        .gte('date', format(addDays(new Date(), 3), 'yyyy-MM-dd'))
         .order('date', { ascending: true })
         .order('time', { ascending: true });
 
@@ -187,6 +187,8 @@ function ReservePageContent() {
                     onSelect={setSelectedDate}
                     disabled={(date) => {
                       const dateStr = format(date, 'yyyy-MM-dd');
+                      const minDate = format(addDays(new Date(), 3), 'yyyy-MM-dd');
+                      if (dateStr < minDate) return true;
                       return !schedules.some((s) => s.date === dateStr);
                     }}
                   />
