@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="600" height="400">
+  <defs>
+    <linearGradient id="sky_b4" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#9e9e9e"/>
+      <stop offset="100%" stop-color="#bdbdbd"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="400" fill="url(#sky_b4)"/>
+  <rect y="310" width="600" height="90" fill="#7a8a5a"/>
+  <!-- large two-family house body -->
+  <rect x="50" y="150" width="500" height="200" fill="#c9b99a"/>
+  <!-- left unit -->
+  <rect x="50" y="150" width="245" height="200" fill="#c5b495"/>
+  <!-- right unit -->
+  <rect x="305" y="150" width="245" height="200" fill="#bfad8e"/>
+  <!-- dividing pillar -->
+  <rect x="295" y="150" width="12" height="200" fill="#a0927e"/>
+  <!-- roof left -->
+  <polygon points="30,165 175,70 320,165" fill="#5d4037"/>
+  <!-- roof right -->
+  <polygon points="280,165 425,70 570,165" fill="#5d4037"/>
+  <!-- mold and moss heavy -->
+  <ellipse cx="100" cy="270" rx="50" ry="30" fill="#4caf50" opacity="0.25"/>
+  <ellipse cx="200" cy="300" rx="60" ry="25" fill="#388e3c" opacity="0.22"/>
+  <ellipse cx="420" cy="260" rx="55" ry="32" fill="#4caf50" opacity="0.23"/>
+  <ellipse cx="500" cy="295" rx="45" ry="22" fill="#2e7d32" opacity="0.2"/>
+  <ellipse cx="150" cy="190" rx="30" ry="20" fill="#558b2f" opacity="0.2"/>
+  <ellipse cx="460" cy="200" rx="35" ry="22" fill="#558b2f" opacity="0.18"/>
+  <!-- staining streaks -->
+  <rect x="110" y="165" width="4" height="130" fill="#795548" opacity="0.3"/>
+  <rect x="230" y="175" width="3" height="120" fill="#795548" opacity="0.25"/>
+  <rect x="360" y="170" width="4" height="125" fill="#795548" opacity="0.3"/>
+  <rect x="490" y="168" width="3" height="128" fill="#795548" opacity="0.25"/>
+  <!-- windows left unit x2 -->
+  <rect x="75" y="185" width="70" height="60" fill="#90a4ae" stroke="#78909c" stroke-width="2"/>
+  <line x1="110" y1="185" x2="110" y2="245" stroke="#78909c" stroke-width="1.5"/>
+  <line x1="75" y1="215" x2="145" y2="215" stroke="#78909c" stroke-width="1.5"/>
+  <rect x="175" y="185" width="70" height="60" fill="#90a4ae" stroke="#78909c" stroke-width="2"/>
+  <line x1="210" y1="185" x2="210" y2="245" stroke="#78909c" stroke-width="1.5"/>
+  <line x1="175" y1="215" x2="245" y2="215" stroke="#78909c" stroke-width="1.5"/>
+  <!-- windows right unit x2 -->
+  <rect x="335" y="185" width="70" height="60" fill="#90a4ae" stroke="#78909c" stroke-width="2"/>
+  <line x1="370" y1="185" x2="370" y2="245" stroke="#78909c" stroke-width="1.5"/>
+  <line x1="335" y1="215" x2="405" y2="215" stroke="#78909c" stroke-width="1.5"/>
+  <rect x="445" y="185" width="70" height="60" fill="#90a4ae" stroke="#78909c" stroke-width="2"/>
+  <line x1="480" y1="185" x2="480" y2="245" stroke="#78909c" stroke-width="1.5"/>
+  <line x1="445" y1="215" x2="515" y2="215" stroke="#78909c" stroke-width="1.5"/>
+  <!-- doors -->
+  <rect x="125" y="260" width="55" height="90" fill="#8d6e63" rx="2"/>
+  <circle cx="173" cy="307" r="4" fill="#bdbdbd"/>
+  <rect x="420" y="260" width="55" height="90" fill="#8d6e63" rx="2"/>
+  <circle cx="468" cy="307" r="4" fill="#bdbdbd"/>
+  <!-- label -->
+  <rect x="20" y="20" width="100" height="30" rx="6" fill="#c62828" opacity="0.9"/>
+  <text x="70" y="40" text-anchor="middle" fill="white" font-size="14" font-family="sans-serif" font-weight="bold">BEFORE</text>
+</svg>

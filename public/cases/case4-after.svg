@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="600" height="400">
+  <defs>
+    <linearGradient id="sky_a4" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#90caf9"/>
+      <stop offset="100%" stop-color="#e3f2fd"/>
+    </linearGradient>
+    <linearGradient id="wall_a4" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#fafafa"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="400" fill="url(#sky_a4)"/>
+  <rect y="310" width="600" height="90" fill="#a5d6a7"/>
+  <!-- large two-family house body white -->
+  <rect x="50" y="150" width="500" height="200" fill="url(#wall_a4)"/>
+  <!-- subtle left/right distinction -->
+  <rect x="50" y="150" width="245" height="200" fill="white" stroke="#e0e0e0" stroke-width="1"/>
+  <rect x="305" y="150" width="245" height="200" fill="white" stroke="#e0e0e0" stroke-width="1"/>
+  <!-- accent stripe -->
+  <rect x="50" y="320" width="500" height="12" fill="#1565c0"/>
+  <!-- dividing pillar clean -->
+  <rect x="295" y="150" width="12" height="200" fill="#e0e0e0"/>
+  <!-- roof left dark -->
+  <polygon points="30,165 175,70 320,165" fill="#37474f"/>
+  <polygon points="30,165 175,70 320,165" fill="#455a64" opacity="0.5"/>
+  <!-- roof right dark -->
+  <polygon points="280,165 425,70 570,165" fill="#37474f"/>
+  <polygon points="280,165 425,70 570,165" fill="#455a64" opacity="0.5"/>
+  <!-- gutters -->
+  <line x1="30" y1="165" x2="320" y2="165" stroke="#263238" stroke-width="4"/>
+  <line x1="280" y1="165" x2="570" y2="165" stroke="#263238" stroke-width="4"/>
+  <!-- windows left unit x2 clean -->
+  <rect x="75" y="185" width="70" height="60" fill="#e3f2fd" stroke="#90caf9" stroke-width="2.5" rx="2"/>
+  <rect x="78" y="188" width="31" height="54" fill="#bbdefb" opacity="0.3"/>
+  <line x1="110" y1="185" x2="110" y2="245" stroke="#90caf9" stroke-width="2"/>
+  <line x1="75" y1="215" x2="145" y2="215" stroke="#90caf9" stroke-width="2"/>
+  <rect x="175" y="185" width="70" height="60" fill="#e3f2fd" stroke="#90caf9" stroke-width="2.5" rx="2"/>
+  <rect x="178" y="188" width="31" height="54" fill="#bbdefb" opacity="0.3"/>
+  <line x1="210" y1="185" x2="210" y2="245" stroke="#90caf9" stroke-width="2"/>
+  <line x1="175" y1="215" x2="245" y2="215" stroke="#90caf9" stroke-width="2"/>
+  <!-- windows right unit x2 clean -->
+  <rect x="335" y="185" width="70" height="60" fill="#e3f2fd" stroke="#90caf9" stroke-width="2.5" rx="2"/>
+  <rect x="338" y="188" width="31" height="54" fill="#bbdefb" opacity="0.3"/>
+  <line x1="370" y1="185" x2="370" y2="245" stroke="#90caf9" stroke-width="2"/>
+  <line x1="335" y1="215" x2="405" y2="215" stroke="#90caf9" stroke-width="2"/>
+  <rect x="445" y="185" width="70" height="60" fill="#e3f2fd" stroke="#90caf9" stroke-width="2.5" rx="2"/>
+  <rect x="448" y="188" width="31" height="54" fill="#bbdefb" opacity="0.3"/>
+  <line x1="480" y1="185" x2="480" y2="245" stroke="#90caf9" stroke-width="2"/>
+  <line x1="445" y1="215" x2="515" y2="215" stroke="#90caf9" stroke-width="2"/>
+  <!-- doors -->
+  <rect x="125" y="260" width="55" height="90" fill="#1565c0" rx="3"/>
+  <rect x="132" y="268" width="41" height="30" fill="#1976d2" rx="2" opacity="0.5"/>
+  <circle cx="173" cy="307" r="4" fill="#ffd54f"/>
+  <rect x="420" y="260" width="55" height="90" fill="#1565c0" rx="3"/>
+  <rect x="427" y="268" width="41" height="30" fill="#1976d2" rx="2" opacity="0.5"/>
+  <circle cx="468" cy="307" r="4" fill="#ffd54f"/>
+  <!-- labels UNIT -->
+  <text x="175" y="170" text-anchor="middle" fill="#9e9e9e" font-size="11" font-family="sans-serif">1F・2F（親世帯）</text>
+  <text x="430" y="170" text-anchor="middle" fill="#9e9e9e" font-size="11" font-family="sans-serif">1F・2F（子世帯）</text>
+  <!-- label -->
+  <rect x="20" y="20" width="100" height="30" rx="6" fill="#2e7d32" opacity="0.9"/>
+  <text x="70" y="40" text-anchor="middle" fill="white" font-size="14" font-family="sans-serif" font-weight="bold">AFTER</text>
+</svg>

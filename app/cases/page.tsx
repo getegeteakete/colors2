@@ -1,4 +1,8 @@
+'use client';
+
+import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -15,6 +19,8 @@ const cases = [
     tags: ["外壁", "屋根", "断熱塗料"],
     before: "外壁全体にひび割れ・色あせ",
     after: "新築同様の美観を回復",
+    beforeImg: "/cases/case1-before.svg",
+    afterImg: "/cases/case1-after.svg",
   },
   {
     id: 2,
@@ -26,6 +32,8 @@ const cases = [
     tags: ["壁紙", "床材", "内装"],
     before: "古びた壁紙・フローリングの傷み",
     after: "モダンで清潔感のある室内に",
+    beforeImg: "/cases/case2-before.svg",
+    afterImg: "/cases/case2-after.svg",
   },
   {
     id: 3,
@@ -37,6 +45,8 @@ const cases = [
     tags: ["店舗", "外装", "内装"],
     before: "古くなった外観で集客力が低下",
     after: "ブランドイメージに合った外観に一新",
+    beforeImg: "/cases/case3-before.svg",
+    afterImg: "/cases/case3-after.svg",
   },
   {
     id: 4,
@@ -48,6 +58,8 @@ const cases = [
     tags: ["外壁", "防カビ", "二世帯"],
     before: "カビ・コケが発生し見栄えが悪化",
     after: "清潔感のある白い外壁を回復",
+    beforeImg: "/cases/case4-before.svg",
+    afterImg: "/cases/case4-after.svg",
   },
   {
     id: 5,
@@ -59,6 +71,8 @@ const cases = [
     tags: ["車体", "ラッピング", "業務車両"],
     before: "無地の業務用バン",
     after: "企業ブランドを訴求するデザインに",
+    beforeImg: "/cases/case5-before.svg",
+    afterImg: "/cases/case5-after.svg",
   },
   {
     id: 6,
@@ -70,6 +84,8 @@ const cases = [
     tags: ["キッチン", "浴室", "設備交換"],
     before: "古い設備で使いにくく掃除も困難",
     after: "機能的で清掃しやすい最新設備に",
+    beforeImg: "/cases/case6-before.svg",
+    afterImg: "/cases/case6-after.svg",
   },
 ];
 
@@ -81,6 +97,72 @@ const categoryColors: { [key: string]: string } = {
   "施設塗装": "bg-purple-100 text-purple-800",
   "車体塗装": "bg-orange-100 text-orange-800",
 };
+
+function CaseCard({ c }: { c: typeof cases[0] }) {
+  const [showAfter, setShowAfter] = useState(true);
+  return (
+    <Card key={c.id} className="hover:shadow-lg transition-shadow flex flex-col">
+      {/* Before/After image area */}
+      <div className="relative h-48 rounded-t-lg overflow-hidden bg-muted">
+        <Image
+          src={showAfter ? c.afterImg : c.beforeImg}
+          alt={`${c.title} ${showAfter ? 'After' : 'Before'}`}
+          fill
+          className="object-cover transition-opacity duration-300"
+        />
+        {/* Toggle buttons */}
+        <div className="absolute bottom-2 right-2 flex gap-1">
+          <button
+            onClick={() => setShowAfter(false)}
+            className={`text-xs px-2 py-1 rounded font-bold transition-colors ${!showAfter ? 'bg-red-600 text-white' : 'bg-black/40 text-white hover:bg-black/60'}`}
+          >
+            Before
+          </button>
+          <button
+            onClick={() => setShowAfter(true)}
+            className={`text-xs px-2 py-1 rounded font-bold transition-colors ${showAfter ? 'bg-green-600 text-white' : 'bg-black/40 text-white hover:bg-black/60'}`}
+          >
+            After
+          </button>
+        </div>
+      </div>
+      <CardHeader className="pb-2">
+        <div className="flex items-center justify-between mb-1">
+          <span className={`text-xs font-semibold px-2 py-1 rounded-full ${categoryColors[c.category] || "bg-gray-100 text-gray-800"}`}>
+            {c.category}
+          </span>
+          <div className="flex items-center text-xs text-muted-foreground gap-1">
+            <Calendar className="w-3 h-3" />
+            {c.date}
+          </div>
+        </div>
+        <CardTitle className="text-base">{c.title}</CardTitle>
+        <div className="flex items-center text-xs text-muted-foreground gap-1 mt-1">
+          <MapPin className="w-3 h-3" />
+          {c.location}
+        </div>
+      </CardHeader>
+      <CardContent className="flex flex-col flex-1">
+        <CardDescription className="text-sm mb-4 flex-1">
+          {c.description}
+        </CardDescription>
+        {/* Before/After text */}
+        <div className="bg-muted/50 rounded-lg p-3 mb-4 text-xs space-y-1">
+          <div><span className="font-semibold text-destructive">Before：</span>{c.before}</div>
+          <div><span className="font-semibold text-green-600">After：</span>{c.after}</div>
+        </div>
+        {/* Tags */}
+        <div className="flex flex-wrap gap-1">
+          {c.tags.map((tag) => (
+            <Badge key={tag} variant="secondary" className="text-xs">
+              {tag}
+            </Badge>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
 
 export default function CasesPage() {
   return (
@@ -114,48 +196,7 @@ export default function CasesPage() {
           {/* Cases Grid */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
             {cases.map((c) => (
-              <Card key={c.id} className="hover:shadow-lg transition-shadow flex flex-col">
-                {/* Placeholder image area */}
-                <div className="h-48 bg-muted rounded-t-lg flex items-center justify-center">
-                  <span className="text-muted-foreground text-sm">施工写真</span>
-                </div>
-                <CardHeader className="pb-2">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className={`text-xs font-semibold px-2 py-1 rounded-full ${categoryColors[c.category] || "bg-gray-100 text-gray-800"}`}>
-                      {c.category}
-                    </span>
-                    <div className="flex items-center text-xs text-muted-foreground gap-1">
-                      <Calendar className="w-3 h-3" />
-                      {c.date}
-                    </div>
-                  </div>
-                  <CardTitle className="text-base">{c.title}</CardTitle>
-                  <div className="flex items-center text-xs text-muted-foreground gap-1 mt-1">
-                    <MapPin className="w-3 h-3" />
-                    {c.location}
-                  </div>
-                </CardHeader>
-                <CardContent className="flex flex-col flex-1">
-                  <CardDescription className="text-sm mb-4 flex-1">
-                    {c.description}
-                  </CardDescription>
-
-                  {/* Before/After */}
-                  <div className="bg-muted/50 rounded-lg p-3 mb-4 text-xs space-y-1">
-                    <div><span className="font-semibold text-destructive">Before：</span>{c.before}</div>
-                    <div><span className="font-semibold text-green-600">After：</span>{c.after}</div>
-                  </div>
-
-                  {/* Tags */}
-                  <div className="flex flex-wrap gap-1">
-                    {c.tags.map((tag) => (
-                      <Badge key={tag} variant="secondary" className="text-xs">
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+              <CaseCard key={c.id} c={c} />
             ))}
           </div>
 

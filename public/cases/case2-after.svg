@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="600" height="400">
+  <defs>
+    <linearGradient id="wall_a2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fafafa"/>
+      <stop offset="100%" stop-color="#f5f5f5"/>
+    </linearGradient>
+    <linearGradient id="floor_a2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffe0b2"/>
+      <stop offset="100%" stop-color="#ffcc80"/>
+    </linearGradient>
+  </defs>
+  <!-- ceiling white -->
+  <rect width="600" height="70" fill="#ffffff"/>
+  <!-- walls clean white -->
+  <rect y="70" width="600" height="230" fill="url(#wall_a2)"/>
+  <!-- accent wall left -->
+  <rect y="70" width="180" height="230" fill="#eceff1"/>
+  <!-- new floor -->
+  <rect y="300" width="600" height="100" fill="url(#floor_a2)"/>
+  <!-- floor planks neat -->
+  <line x1="0" y1="320" x2="600" y2="320" stroke="#ffb74d" stroke-width="1.5" opacity="0.5"/>
+  <line x1="0" y1="345" x2="600" y2="345" stroke="#ffb74d" stroke-width="1.5" opacity="0.5"/>
+  <line x1="0" y1="370" x2="600" y2="370" stroke="#ffb74d" stroke-width="1.5" opacity="0.4"/>
+  <line x1="120" y1="300" x2="80" y2="400" stroke="#ffb74d" stroke-width="1" opacity="0.3"/>
+  <line x1="300" y1="300" x2="260" y2="400" stroke="#ffb74d" stroke-width="1" opacity="0.3"/>
+  <line x1="480" y1="300" x2="440" y2="400" stroke="#ffb74d" stroke-width="1" opacity="0.3"/>
+  <!-- large window modern -->
+  <rect x="200" y="80" width="200" height="140" fill="#e3f2fd" stroke="#90caf9" stroke-width="3" rx="2"/>
+  <line x1="300" y1="80" x2="300" y2="220" stroke="#90caf9" stroke-width="2"/>
+  <rect x="203" y="83" width="95" height="134" fill="#bbdefb" opacity="0.3"/>
+  <rect x="302" y="83" width="95" height="134" fill="#bbdefb" opacity="0.2"/>
+  <!-- curtain sheer -->
+  <rect x="185" y="75" width="20" height="145" fill="#fff9c4" opacity="0.8" rx="2"/>
+  <rect x="395" y="75" width="20" height="145" fill="#fff9c4" opacity="0.8" rx="2"/>
+  <!-- modern sofa -->
+  <rect x="380" y="220" width="200" height="80" fill="#546e7a" rx="8"/>
+  <rect x="390" y="210" width="190" height="25" fill="#607d8b" rx="6"/>
+  <rect x="382" y="228" width="18" height="60" fill="#455a64" rx="4"/>
+  <rect x="560" y="228" width="18" height="60" fill="#455a64" rx="4"/>
+  <!-- cushions -->
+  <rect x="398" y="218" width="50" height="22" fill="#ef9a9a" rx="4"/>
+  <rect x="460" y="218" width="50" height="22" fill="#fff59d" rx="4"/>
+  <!-- plant -->
+  <rect x="60" y="250" width="24" height="50" fill="#8d6e63" rx="3"/>
+  <ellipse cx="72" cy="240" rx="30" ry="25" fill="#66bb6a"/>
+  <ellipse cx="55" cy="255" rx="18" ry="14" fill="#81c784"/>
+  <ellipse cx="92" cy="253" rx="18" ry="14" fill="#4caf50"/>
+  <!-- picture frame -->
+  <rect x="430" y="90" width="80" height="60" fill="white" stroke="#b0bec5" stroke-width="3" rx="2"/>
+  <rect x="438" y="98" width="64" height="44" fill="#e8f5e9"/>
+  <ellipse cx="470" cy="120" rx="20" ry="15" fill="#a5d6a7"/>
+  <!-- baseboard clean -->
+  <rect y="295" width="600" height="6" fill="#e0e0e0"/>
+  <!-- label -->
+  <rect x="20" y="20" width="100" height="30" rx="6" fill="#2e7d32" opacity="0.9"/>
+  <text x="70" y="40" text-anchor="middle" fill="white" font-size="14" font-family="sans-serif" font-weight="bold">AFTER</text>
+</svg>

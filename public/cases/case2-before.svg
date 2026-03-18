@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="600" height="400">
+  <defs>
+    <linearGradient id="room_b" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#d7ccc8"/>
+      <stop offset="100%" stop-color="#bcaaa4"/>
+    </linearGradient>
+  </defs>
+  <!-- ceiling -->
+  <rect width="600" height="80" fill="#efebe9"/>
+  <!-- walls -->
+  <rect y="80" width="600" height="220" fill="url(#room_b)"/>
+  <!-- old floor -->
+  <rect y="300" width="600" height="100" fill="#8d6e63"/>
+  <!-- floor planks worn -->
+  <line x1="0" y1="325" x2="600" y2="325" stroke="#795548" stroke-width="1.5" opacity="0.5"/>
+  <line x1="0" y1="350" x2="600" y2="350" stroke="#795548" stroke-width="1.5" opacity="0.5"/>
+  <line x1="0" y1="375" x2="600" y2="375" stroke="#795548" stroke-width="1.5" opacity="0.4"/>
+  <line x1="120" y1="300" x2="80" y2="400" stroke="#795548" stroke-width="1" opacity="0.4"/>
+  <line x1="280" y1="300" x2="240" y2="400" stroke="#795548" stroke-width="1" opacity="0.4"/>
+  <line x1="440" y1="300" x2="400" y2="400" stroke="#795548" stroke-width="1" opacity="0.4"/>
+  <!-- wallpaper peeling -->
+  <rect x="50" y="120" width="200" height="150" fill="#cfb9a5" opacity="0.5"/>
+  <polygon points="50,120 130,120 100,170" fill="#e0c8b8" opacity="0.7"/>
+  <polygon points="230,200 250,180 240,230" fill="#e0c8b8" opacity="0.6"/>
+  <!-- yellowed patches -->
+  <ellipse cx="350" cy="180" rx="60" ry="40" fill="#c8b49a" opacity="0.4"/>
+  <ellipse cx="500" cy="220" rx="45" ry="30" fill="#bf9b7a" opacity="0.35"/>
+  <!-- window -->
+  <rect x="220" y="90" width="160" height="120" fill="#cfd8dc" stroke="#a1887f" stroke-width="4"/>
+  <line x1="300" y1="90" x2="300" y2="210" stroke="#a1887f" stroke-width="3"/>
+  <line x1="220" y1="150" x2="380" y2="150" stroke="#a1887f" stroke-width="3"/>
+  <rect x="225" y="94" width="73" height="54" fill="#b0bec5" opacity="0.4"/>
+  <!-- old furniture hint -->
+  <rect x="420" y="200" width="160" height="100" fill="#6d4c41" rx="3"/>
+  <rect x="430" y="210" width="60" height="70" fill="#5d4037" rx="2"/>
+  <rect x="500" y="210" width="60" height="70" fill="#5d4037" rx="2"/>
+  <!-- baseboard -->
+  <rect y="295" width="600" height="8" fill="#a1887f"/>
+  <!-- label -->
+  <rect x="20" y="20" width="100" height="30" rx="6" fill="#c62828" opacity="0.9"/>
+  <text x="70" y="40" text-anchor="middle" fill="white" font-size="14" font-family="sans-serif" font-weight="bold">BEFORE</text>
+</svg>
