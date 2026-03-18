@@ -215,7 +215,7 @@ export default function FlowPage() {
                     </Button>
                   </Link>
                   <Link href="/">
-                    <Button size="lg" variant="outline" className="w-full sm:w-auto border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10">
+                    <Button size="lg" variant="outline" className="w-full sm:w-auto border-white text-white hover:bg-white hover:text-primary">
                       トップページに戻る
                     </Button>
                   </Link>
