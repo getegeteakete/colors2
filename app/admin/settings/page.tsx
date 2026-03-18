@@ -4,8 +4,11 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
+} from '@/components/ui/dialog';
 import { toast } from 'sonner';
-import { Save, Mail, Lock, Calendar } from 'lucide-react';
+import { Save, Mail, Lock, Calendar, Trash2, RefreshCw, AlertTriangle } from 'lucide-react';
 
 export default function SettingsPage() {
   const [settings, setSettings] = useState({
@@ -16,9 +19,35 @@ export default function SettingsPage() {
     operatingHours: '11:00-18:00',
   });
 
+  // リセット用state
+  const [resetDialog, setResetDialog] = useState<'all' | 'schedules' | null>(null);
+  const [resetPassword, setResetPassword] = useState('');
+  const [resetting, setResetting] = useState(false);
+
   const handleSave = () => {
-    // 実際の実装では、API経由でサーバー側の設定を更新する
     toast.success('設定を保存しました（現在は表示のみ）');
+  };
+
+  const handleReset = async () => {
+    if (!resetPassword) return toast.error('パスワードを入力してください');
+    setResetting(true);
+    try {
+      const target = resetDialog === 'all' ? 'all_test_data' : 'reset_schedules';
+      const res = await fetch('/api/admin/reset', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ target, admin_password: resetPassword }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      toast.success(data.message);
+      setResetDialog(null);
+      setResetPassword('');
+    } catch (e: any) {
+      toast.error(e.message);
+    } finally {
+      setResetting(false);
+    }
   };
 
   return (
@@ -182,6 +211,98 @@ export default function SettingsPage() {
           </div>
         </div>
       </div>
+
+      {/* データリセット */}
+      <div className="bg-white border border-red-200 rounded shadow-sm">
+        <div className="px-5 py-4 border-b border-red-200 flex items-center gap-2">
+          <AlertTriangle className="h-4 w-4 text-red-600" />
+          <h2 className="text-base font-semibold text-red-700">データ管理</h2>
+        </div>
+        <div className="p-5 space-y-4">
+          <p className="text-sm text-[#646970]">
+            テストデータの削除やスケジュールのリセットを行います。操作前に必ず内容を確認してください。
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="border border-red-200 rounded p-4 space-y-2">
+              <div className="flex items-center gap-2">
+                <Trash2 className="h-4 w-4 text-red-600" />
+                <span className="font-semibold text-sm text-[#23282d]">テストデータを全削除</span>
+              </div>
+              <p className="text-xs text-[#646970]">
+                すべての予約・支払い・顧客情報を削除します。スケジュールは残ります。
+              </p>
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full border-red-300 text-red-600 hover:bg-red-50"
+                onClick={() => setResetDialog('all')}
+              >
+                <Trash2 className="h-4 w-4 mr-2" />
+                全データを削除する
+              </Button>
+            </div>
+            <div className="border border-orange-200 rounded p-4 space-y-2">
+              <div className="flex items-center gap-2">
+                <RefreshCw className="h-4 w-4 text-orange-600" />
+                <span className="font-semibold text-sm text-[#23282d]">スケジュールをリセット</span>
+              </div>
+              <p className="text-xs text-[#646970]">
+                スケジュールを削除して、本日から60日分（火・水・木）を再作成します。
+              </p>
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full border-orange-300 text-orange-600 hover:bg-orange-50"
+                onClick={() => setResetDialog('schedules')}
+              >
+                <RefreshCw className="h-4 w-4 mr-2" />
+                スケジュールをリセット
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 確認ダイアログ */}
+      <Dialog open={!!resetDialog} onOpenChange={() => { setResetDialog(null); setResetPassword(''); }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-red-600">
+              <AlertTriangle className="h-5 w-5" />
+              {resetDialog === 'all' ? 'テストデータを全削除' : 'スケジュールをリセット'}
+            </DialogTitle>
+            <DialogDescription>
+              {resetDialog === 'all'
+                ? 'すべての予約・支払い・顧客情報が削除されます。この操作は取り消せません。'
+                : 'スケジュールをすべて削除して60日分を再作成します。この操作は取り消せません。'
+              }
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3 py-2">
+            <div className="bg-red-50 border border-red-200 rounded px-4 py-3 text-sm text-red-800">
+              ⚠️ 確認のため管理者パスワードを入力してください
+            </div>
+            <div className="space-y-1.5">
+              <Label>管理者パスワード</Label>
+              <Input
+                type="password"
+                value={resetPassword}
+                onChange={e => setResetPassword(e.target.value)}
+                placeholder="パスワードを入力"
+                onKeyDown={e => e.key === 'Enter' && handleReset()}
+              />
+            </div>
+          </div>
+          <DialogFooter className="gap-2">
+            <Button variant="outline" onClick={() => { setResetDialog(null); setResetPassword(''); }}>
+              キャンセル
+            </Button>
+            <Button variant="destructive" onClick={handleReset} disabled={resetting}>
+              {resetting ? '処理中...' : '実行する'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
