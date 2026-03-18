@@ -13,6 +13,7 @@ import {
   Settings,
   LogOut,
   PanelLeftClose,
+  BookOpen,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
@@ -22,6 +23,7 @@ const menuItems = [
   { title: '予約管理', href: '/admin/reservations', icon: Calendar },
   { title: '決済管理', href: '/admin/payments', icon: CreditCard },
   { title: 'スケジュール管理', href: '/admin/schedule', icon: Clock },
+  { title: 'マニュアル', href: '/admin/manual', icon: BookOpen },
   { title: '設定', href: '/admin/settings', icon: Settings },
 ];
 
