@@ -2,7 +2,7 @@ import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-const FROM_EMAIL = process.env.SMTP_USER || 's@colors092.site';
+const FROM_EMAIL = 'onboarding@resend.dev';
 const FROM_NAME = '株式会社COLORS';
 const ADMIN_EMAIL = process.env.SMTP_USER || 's@colors092.site';
 
