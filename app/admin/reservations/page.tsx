@@ -353,7 +353,6 @@ function ReservationsPageContent() {
           </Table>
         </div>
       </div>
-      </div>
 
       {/* 削除確認ダイアログ */}
       <Dialog open={!!deleteTarget} onOpenChange={() => setDeleteTarget(null)}>
