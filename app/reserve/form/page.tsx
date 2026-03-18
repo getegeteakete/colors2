@@ -177,6 +177,8 @@ function ReserveFormContent() {
         .eq('email', values.email)
         .single();
 
+      const isNewUser = !userData;
+
       if (!userData) {
         const { data: newUser, error: userError } = await client
           .from('users')
@@ -248,6 +250,7 @@ function ReserveFormContent() {
 
       // メール送信（非同期、エラーは無視）
       try {
+        // 予約確認メール（全員）
         await fetch('/api/email/send', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -261,9 +264,16 @@ function ReserveFormContent() {
             content: values.content,
           }),
         });
+        // 新規ユーザーにはウェルカムメール＋マイページ案内を送信
+        if (isNewUser) {
+          await fetch('/api/email/welcome', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: values.name, email: values.email }),
+          });
+        }
       } catch (emailError) {
         console.error('メール送信エラー（続行）:', emailError);
-        // メール送信のエラーは予約処理を続行
       }
 
       toast.success('予約が完了しました');

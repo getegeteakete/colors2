@@ -14,7 +14,7 @@ export async function GET() {
 
     const { data, error } = await resend.emails.send({
       from: 'onboarding@resend.dev',
-      to: ['sup@ei-life.co.jp'],
+      to: ['s@colors092.site'],
       subject: '【テスト】Resendメール送信テスト - COLORS予約システム',
       html: '<p>Resendからのテストメールです。このメールが届けば設定完了です！</p>',
     });

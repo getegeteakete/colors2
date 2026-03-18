@@ -5,7 +5,55 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 const FROM_EMAIL = process.env.SMTP_USER || 's@colors092.site';
 const FROM_NAME = '株式会社COLORS';
 const ADMIN_EMAIL = process.env.SMTP_USER || 's@colors092.site';
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://colors-yoyaku.vercel.app';
 
+// ── 共通HTMLテンプレート ──────────────────────────
+const baseStyle = `
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #f4f6f9; font-family: 'Noto Sans JP', 'Hiragino Sans', Meiryo, sans-serif; color: #333; }
+    .wrapper { max-width: 620px; margin: 32px auto; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
+    .header { background: linear-gradient(135deg, #1a3561 0%, #2856a3 100%); padding: 36px 40px; text-align: center; }
+    .header-logo { color: #fff; font-size: 22px; font-weight: 700; letter-spacing: 2px; margin-bottom: 4px; }
+    .header-sub { color: rgba(255,255,255,0.75); font-size: 12px; letter-spacing: 1px; }
+    .header-title { color: #fff; font-size: 18px; font-weight: 700; margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2); }
+    .body { padding: 36px 40px; }
+    .greeting { font-size: 15px; color: #444; margin-bottom: 16px; line-height: 1.8; }
+    .info-card { background: #f8faff; border: 1px solid #dde6f5; border-radius: 8px; padding: 24px; margin: 24px 0; }
+    .info-card h3 { font-size: 13px; font-weight: 700; color: #2856a3; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 2px solid #dde6f5; }
+    .info-row { display: flex; gap: 12px; padding: 8px 0; border-bottom: 1px solid #eef2f8; font-size: 14px; }
+    .info-row:last-child { border-bottom: none; }
+    .info-label { color: #6b7a9a; min-width: 120px; font-weight: 500; }
+    .info-value { color: #1a2a4a; font-weight: 400; flex: 1; }
+    .highlight-box { background: linear-gradient(135deg, #e8f0fe 0%, #d4e3ff 100%); border-left: 4px solid #2856a3; border-radius: 0 8px 8px 0; padding: 16px 20px; margin: 20px 0; }
+    .btn { display: inline-block; background: linear-gradient(135deg, #1a3561 0%, #2856a3 100%); color: #fff !important; text-decoration: none; padding: 14px 32px; border-radius: 8px; font-weight: 700; font-size: 15px; margin: 8px 4px; }
+    .btn-zoom { background: linear-gradient(135deg, #2D8CFF 0%, #1a6fd8 100%); }
+    .btn-outline { background: #fff; color: #2856a3 !important; border: 2px solid #2856a3; }
+    .note { background: #fffbf0; border: 1px solid #ffe4a0; border-radius: 8px; padding: 14px 18px; font-size: 13px; color: #7a5a00; margin: 20px 0; line-height: 1.7; }
+    .divider { height: 1px; background: #eef2f8; margin: 24px 0; }
+    .message-text { font-size: 14px; color: #444; line-height: 1.9; margin: 12px 0; }
+    .footer { background: #1a2a4a; padding: 28px 40px; text-align: center; }
+    .footer-name { color: #fff; font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+    .footer-info { color: rgba(255,255,255,0.6); font-size: 12px; line-height: 1.8; }
+    .footer-info a { color: rgba(255,255,255,0.8); text-decoration: none; }
+    .status-badge { display: inline-block; background: #e8f5e9; color: #2e7d32; border-radius: 20px; padding: 4px 14px; font-size: 12px; font-weight: 700; }
+    .admin-header { background: linear-gradient(135deg, #b71c1c 0%, #e53935 100%); }
+  </style>
+`;
+
+const footer = `
+  <div class="footer">
+    <div class="footer-name">株式会社COLORS</div>
+    <div class="footer-info">
+      📞 090-6120-2995（月〜金 9:00〜17:00）<br>
+      ✉️ <a href="mailto:${ADMIN_EMAIL}">${ADMIN_EMAIL}</a><br>
+      🌐 福岡市を中心にご対応いたします
+    </div>
+  </div>
+`;
+
+// ── 型定義 ────────────────────────────────────────
 export interface ReservationEmailData {
   name: string;
   email: string;
@@ -17,164 +65,226 @@ export interface ReservationEmailData {
   zoomUrl?: string;
 }
 
-// 予約確認メール（お客様宛）
+// ── 1. 予約確認メール（お客様宛）────────────────────
 export async function sendReservationConfirmationEmail(data: ReservationEmailData) {
   const { name, email, date, time, type, address, content, zoomUrl } = data;
+  const typeLabel = type === 'onsite' ? '訪問調査' : 'Zoom相談';
+
+  const html = `<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">${baseStyle}</head><body>
+    <div class="wrapper">
+      <div class="header">
+        <div class="header-logo">COLORS</div>
+        <div class="header-sub">PAINTING &amp; REFORM</div>
+        <div class="header-title">予約確認のご案内</div>
+      </div>
+      <div class="body">
+        <p class="greeting">${name} 様<br><br>この度は株式会社COLORSにご予約いただき、誠にありがとうございます。<br>以下の内容でご予約を承りました。</p>
+        <div class="info-card">
+          <h3>📋 ご予約内容</h3>
+          <div class="info-row"><span class="info-label">日時</span><span class="info-value"><strong>${date} ${time}</strong></span></div>
+          <div class="info-row"><span class="info-label">種類</span><span class="info-value">${typeLabel}</span></div>
+          ${address ? `<div class="info-row"><span class="info-label">調査先住所</span><span class="info-value">${address}</span></div>` : ''}
+          ${zoomUrl ? `<div class="info-row"><span class="info-label">Zoom URL</span><span class="info-value"><a href="${zoomUrl}" style="color:#2856a3;">${zoomUrl}</a></span></div>` : ''}
+          <div class="info-row"><span class="info-label">相談内容</span><span class="info-value">${content.replace(/\n/g, '<br>')}</span></div>
+        </div>
+        ${type === 'zoom' && zoomUrl ? `
+        <div style="text-align:center; margin: 24px 0;">
+          <a href="${zoomUrl}" class="btn btn-zoom">🎥 Zoomに参加する</a>
+        </div>` : ''}
+        <div class="highlight-box">
+          ${type === 'onsite'
+            ? '📍 スタッフが指定の日時にご自宅へ訪問いたします。当日は作業の妨げにならない服装でお待ちください。'
+            : '💻 Zoom相談の当日は、上記URLから入室をお願いします。お時間の5分前にはご準備ください。'
+          }
+        </div>
+        <div class="note">⚠️ ご都合が悪くなった場合は、お早めに下記までご連絡ください。</div>
+        <div style="text-align:center; margin: 24px 0;">
+          <a href="${APP_URL}/mypage" class="btn btn-outline">マイページで予約を確認</a>
+        </div>
+        <p class="message-text">ご不明な点がございましたら、お気軽にお問い合わせください。<br>引き続き、株式会社COLORSをよろしくお願いいたします。</p>
+      </div>
+      ${footer}
+    </div>
+  </body></html>`;
 
   const { data: result, error } = await resend.emails.send({
     from: `${FROM_NAME} <${FROM_EMAIL}>`,
     to: [email],
     bcc: [ADMIN_EMAIL],
     replyTo: ADMIN_EMAIL,
-    subject: '【予約確認】現地調査のご予約を承りました',
-    html: `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="utf-8">
-        <style>
-          body { font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif; line-height: 1.6; color: #333; }
-          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-          .header { background-color: #1e3a5f; color: white; padding: 20px; text-align: center; border-radius: 6px 6px 0 0; }
-          .content { background-color: #f9f9f9; padding: 30px; border: 1px solid #e0e0e0; }
-          .info-box { background-color: white; border-left: 4px solid #1e3a5f; padding: 15px; margin: 20px 0; border-radius: 0 4px 4px 0; }
-          .footer { text-align: center; padding: 20px; font-size: 12px; color: #666; background: #f0f0f0; border-radius: 0 0 6px 6px; }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <div class="header"><h1 style="margin:0;">予約確認</h1></div>
-          <div class="content">
-            <p>${name} 様</p>
-            <p>この度は、株式会社COLORSの現地調査予約サービスをご利用いただき、誠にありがとうございます。<br>以下の内容でご予約を承りました。</p>
-            <div class="info-box">
-              <h3 style="margin-top:0;">予約内容</h3>
-              <p><strong>日時：</strong>${date} ${time}</p>
-              <p><strong>種類：</strong>${type === 'onsite' ? '訪問調査' : 'Zoom相談'}</p>
-              ${address ? `<p><strong>調査先住所：</strong>${address}</p>` : ''}
-              ${zoomUrl ? `<p><strong>Zoom URL：</strong><a href="${zoomUrl}">${zoomUrl}</a></p>` : ''}
-              <p><strong>相談内容：</strong><br>${content.replace(/\n/g, '<br>')}</p>
-            </div>
-            ${type === 'onsite'
-              ? '<p>スタッフが指定の日時に現地へ訪問いたします。ご都合が悪くなった場合はお早めにご連絡ください。</p>'
-              : '<p>Zoom相談の場合は、上記のZoom URLからアクセスしてください。お時間の5分前には準備をお願いいたします。</p>'
-            }
-            <p>ご不明な点がございましたら、お気軽にお問い合わせください。<br>今後とも株式会社COLORSをよろしくお願いいたします。</p>
-          </div>
-          <div class="footer">
-            <p><strong>株式会社COLORS</strong></p>
-            <p>電話：090-6120-2995（月〜金 9:00〜17:00）</p>
-            <p>メール：${ADMIN_EMAIL}</p>
-            <p>福岡市を中心にご対応いたします。</p>
-          </div>
-        </div>
-      </body>
-      </html>
-    `,
+    subject: `【予約確認】${date} ${time} ${typeLabel}のご予約を承りました`,
+    html,
   });
-
   if (error) throw error;
-  console.log('予約確認メール送信成功:', result?.id);
   return { success: true, messageId: result?.id };
 }
 
-// Zoomリマインドメール
-export async function sendZoomReminderEmail(data: ReservationEmailData) {
-  const { name, email, date, time, zoomUrl } = data;
+// ── 2. 顧客登録完了メール ────────────────────────
+export async function sendWelcomeEmail(name: string, email: string) {
+  const html = `<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">${baseStyle}</head><body>
+    <div class="wrapper">
+      <div class="header">
+        <div class="header-logo">COLORS</div>
+        <div class="header-sub">PAINTING &amp; REFORM</div>
+        <div class="header-title">ご登録ありがとうございます</div>
+      </div>
+      <div class="body">
+        <p class="greeting">${name} 様<br><br>株式会社COLORSの予約サービスにご登録いただき、誠にありがとうございます。<br>マイページからいつでも予約履歴・支払い履歴をご確認いただけます。</p>
+        <div class="info-card">
+          <h3>✅ ご登録内容</h3>
+          <div class="info-row"><span class="info-label">お名前</span><span class="info-value">${name} 様</span></div>
+          <div class="info-row"><span class="info-label">メールアドレス</span><span class="info-value">${email}</span></div>
+        </div>
+        <div class="highlight-box">
+          🔐 初回マイページログイン時にパスワードを設定してください。設定後は安全にご利用いただけます。
+        </div>
+        <div style="text-align:center; margin: 28px 0;">
+          <a href="${APP_URL}/mypage" class="btn">マイページにログインする</a>
+        </div>
+        <div class="divider"></div>
+        <p class="message-text">COLORSでは塗装・リフォームのプロとして、お客様のご自宅を美しく保つお手伝いをいたします。お気軽にご相談ください。</p>
+      </div>
+      ${footer}
+    </div>
+  </body></html>`;
 
   const { data: result, error } = await resend.emails.send({
     from: `${FROM_NAME} <${FROM_EMAIL}>`,
     to: [email],
     replyTo: ADMIN_EMAIL,
-    subject: '【リマインド】明日のZoom相談のご案内',
-    html: `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="utf-8">
-        <style>
-          body { font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif; line-height: 1.6; color: #333; }
-          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-          .header { background-color: #1e3a5f; color: white; padding: 20px; text-align: center; border-radius: 6px 6px 0 0; }
-          .content { background-color: #f9f9f9; padding: 30px; border: 1px solid #e0e0e0; }
-          .info-box { background-color: white; border-left: 4px solid #1e3a5f; padding: 15px; margin: 20px 0; }
-          .zoom-btn { display: inline-block; background-color: #2D8CFF; color: white; padding: 14px 28px; text-decoration: none; border-radius: 6px; font-weight: bold; }
-          .footer { text-align: center; padding: 20px; font-size: 12px; color: #666; background: #f0f0f0; border-radius: 0 0 6px 6px; }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <div class="header"><h1 style="margin:0;">Zoom相談リマインド</h1></div>
-          <div class="content">
-            <p>${name} 様</p>
-            <p>明日のZoom相談のお時間が近づいてまいりましたので、リマインドのご案内をお送りします。</p>
-            <div class="info-box">
-              <h3 style="margin-top:0;">ご予約内容</h3>
-              <p><strong>日時：</strong>${date} ${time}</p>
-              ${zoomUrl ? `<p><strong>Zoom URL：</strong><a href="${zoomUrl}">${zoomUrl}</a></p>` : ''}
-            </div>
-            ${zoomUrl ? `<p style="text-align:center;"><a href="${zoomUrl}" class="zoom-btn">Zoomを開く</a></p>` : ''}
-            <p>お時間の5分前には入室準備をお願いいたします。<br>ご都合が悪くなった場合は、お早めにご連絡ください。</p>
-          </div>
-          <div class="footer">
-            <p><strong>株式会社COLORS</strong></p>
-            <p>電話：090-6120-2995 ／ メール：${ADMIN_EMAIL}</p>
-          </div>
-        </div>
-      </body>
-      </html>
-    `,
+    subject: '【COLORS】ご登録ありがとうございます',
+    html,
   });
-
   if (error) throw error;
-  console.log('Zoomリマインドメール送信成功:', result?.id);
   return { success: true, messageId: result?.id };
 }
 
-// 管理者への通知メール
+// ── 3. Zoomリマインドメール ───────────────────────
+export async function sendZoomReminderEmail(data: ReservationEmailData) {
+  const { name, email, date, time, zoomUrl } = data;
+
+  const html = `<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">${baseStyle}</head><body>
+    <div class="wrapper">
+      <div class="header">
+        <div class="header-logo">COLORS</div>
+        <div class="header-sub">PAINTING &amp; REFORM</div>
+        <div class="header-title">明日のZoom相談リマインド</div>
+      </div>
+      <div class="body">
+        <p class="greeting">${name} 様<br><br>明日のZoom相談のお時間が近づいてまいりました。<br>以下の内容をご確認のうえ、お時間になりましたらご参加ください。</p>
+        <div class="info-card">
+          <h3>📅 ご予約内容</h3>
+          <div class="info-row"><span class="info-label">日時</span><span class="info-value"><strong>${date} ${time}</strong></span></div>
+          <div class="info-row"><span class="info-label">種類</span><span class="info-value">Zoom相談</span></div>
+          ${zoomUrl ? `<div class="info-row"><span class="info-label">Zoom URL</span><span class="info-value"><a href="${zoomUrl}" style="color:#2856a3;">${zoomUrl}</a></span></div>` : ''}
+        </div>
+        ${zoomUrl ? `
+        <div style="text-align:center; margin: 28px 0;">
+          <a href="${zoomUrl}" class="btn btn-zoom">🎥 Zoomを開く</a>
+        </div>` : ''}
+        <div class="highlight-box">
+          ⏰ お時間の <strong>5分前</strong> には入室の準備をお願いいたします。<br>
+          カメラ・マイクの動作確認をあらかじめお願いします。
+        </div>
+        <div class="note">ご都合が悪くなった場合は、お早めにご連絡ください。</div>
+      </div>
+      ${footer}
+    </div>
+  </body></html>`;
+
+  const { data: result, error } = await resend.emails.send({
+    from: `${FROM_NAME} <${FROM_EMAIL}>`,
+    to: [email],
+    replyTo: ADMIN_EMAIL,
+    subject: `【リマインド】明日 ${time} からZoom相談があります`,
+    html,
+  });
+  if (error) throw error;
+  return { success: true, messageId: result?.id };
+}
+
+// ── 4. 管理者通知メール ──────────────────────────
 export async function sendAdminNotificationEmail(data: ReservationEmailData) {
   const { name, email, date, time, type, address, content, zoomUrl } = data;
+  const typeLabel = type === 'onsite' ? '訪問調査' : 'Zoom相談';
+
+  const html = `<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">${baseStyle}</head><body>
+    <div class="wrapper">
+      <div class="header admin-header">
+        <div class="header-logo">COLORS 管理</div>
+        <div class="header-sub">ADMIN NOTIFICATION</div>
+        <div class="header-title">🔔 新規予約が入りました</div>
+      </div>
+      <div class="body">
+        <p class="greeting">新しい予約が入りました。内容をご確認ください。</p>
+        <div class="info-card">
+          <h3>👤 お客様情報</h3>
+          <div class="info-row"><span class="info-label">お名前</span><span class="info-value"><strong>${name} 様</strong></span></div>
+          <div class="info-row"><span class="info-label">メール</span><span class="info-value"><a href="mailto:${email}" style="color:#2856a3;">${email}</a></span></div>
+        </div>
+        <div class="info-card">
+          <h3>📋 予約内容</h3>
+          <div class="info-row"><span class="info-label">日時</span><span class="info-value"><strong>${date} ${time}</strong></span></div>
+          <div class="info-row"><span class="info-label">種類</span><span class="info-value">${typeLabel}</span></div>
+          ${address ? `<div class="info-row"><span class="info-label">住所</span><span class="info-value">${address}</span></div>` : ''}
+          ${zoomUrl ? `<div class="info-row"><span class="info-label">Zoom URL</span><span class="info-value"><a href="${zoomUrl}" style="color:#2856a3;">${zoomUrl}</a></span></div>` : ''}
+          <div class="info-row"><span class="info-label">相談内容</span><span class="info-value">${content.replace(/\n/g, '<br>')}</span></div>
+        </div>
+        <div style="text-align:center; margin: 24px 0;">
+          <a href="${APP_URL}/admin/reservations" class="btn">管理画面で確認する</a>
+        </div>
+      </div>
+      ${footer}
+    </div>
+  </body></html>`;
 
   const { data: result, error } = await resend.emails.send({
     from: `予約システム <${FROM_EMAIL}>`,
     to: [ADMIN_EMAIL],
-    subject: `【新規予約】${name}様 - ${date} ${time}`,
-    html: `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="utf-8">
-        <style>
-          body { font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif; line-height: 1.6; color: #333; }
-          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-          .header { background-color: #c62828; color: white; padding: 20px; text-align: center; border-radius: 6px 6px 0 0; }
-          .content { background-color: #f9f9f9; padding: 30px; border: 1px solid #e0e0e0; }
-          .info-box { background-color: white; border-left: 4px solid #c62828; padding: 15px; margin: 20px 0; }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <div class="header"><h1 style="margin:0;">新規予約通知</h1></div>
-          <div class="content">
-            <p>新しい予約が入りました。</p>
-            <div class="info-box">
-              <p><strong>お客様名：</strong>${name}</p>
-              <p><strong>メール：</strong>${email}</p>
-              <p><strong>日時：</strong>${date} ${time}</p>
-              <p><strong>種類：</strong>${type === 'onsite' ? '訪問調査' : 'Zoom相談'}</p>
-              ${address ? `<p><strong>調査先住所：</strong>${address}</p>` : ''}
-              ${zoomUrl ? `<p><strong>Zoom URL：</strong>${zoomUrl}</p>` : ''}
-              <p><strong>相談内容：</strong><br>${content.replace(/\n/g, '<br>')}</p>
-            </div>
-            <p><a href="${process.env.NEXT_PUBLIC_APP_URL}/admin/reservations" style="color:#c62828;">→ 管理画面で確認する</a></p>
-          </div>
-        </div>
-      </body>
-      </html>
-    `,
+    subject: `【新規予約】${name}様 - ${date} ${time} ${typeLabel}`,
+    html,
   });
-
   if (error) throw error;
-  console.log('管理者通知メール送信成功:', result?.id);
+  return { success: true, messageId: result?.id };
+}
+
+// ── 5. パスワード設定案内メール ──────────────────
+export async function sendPasswordSetupEmail(name: string, email: string) {
+  const html = `<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">${baseStyle}</head><body>
+    <div class="wrapper">
+      <div class="header">
+        <div class="header-logo">COLORS</div>
+        <div class="header-sub">PAINTING &amp; REFORM</div>
+        <div class="header-title">🔐 マイページのご案内</div>
+      </div>
+      <div class="body">
+        <p class="greeting">${name} 様<br><br>ご予約ありがとうございます。<br>マイページから予約履歴・支払い履歴・請求書のダウンロードができます。</p>
+        <div class="highlight-box">
+          初めてマイページにアクセスする際に<strong>パスワードを設定</strong>してください。<br>
+          メールアドレスを入力するだけで簡単に設定できます。
+        </div>
+        <div style="text-align:center; margin: 28px 0;">
+          <a href="${APP_URL}/mypage" class="btn">マイページを開く</a>
+        </div>
+        <div class="info-card">
+          <h3>📱 マイページでできること</h3>
+          <div class="info-row"><span class="info-label">予約履歴</span><span class="info-value">過去・現在の予約を確認</span></div>
+          <div class="info-row"><span class="info-label">支払い履歴</span><span class="info-value">お支払い状況を確認</span></div>
+          <div class="info-row"><span class="info-label">請求書</span><span class="info-value">PDFでダウンロード</span></div>
+          <div class="info-row"><span class="info-label">領収書</span><span class="info-value">支払完了後に発行</span></div>
+        </div>
+      </div>
+      ${footer}
+    </div>
+  </body></html>`;
+
+  const { data: result, error } = await resend.emails.send({
+    from: `${FROM_NAME} <${FROM_EMAIL}>`,
+    to: [email],
+    replyTo: ADMIN_EMAIL,
+    subject: '【COLORS】マイページのご案内',
+    html,
+  });
+  if (error) throw error;
   return { success: true, messageId: result?.id };
 }
